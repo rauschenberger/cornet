@@ -38,8 +38,7 @@ reference:
       - print.cornet
   - title: "Internal functions"
     contents:
-      - .simulate
+      - cv.cornet
       - .test
-      - .compare
       - .equal
       - .check

@@ -18,7 +18,7 @@ net$binomial <- glmnet::cv.glmnet(y=y>cutoff,x=X,family="binomial",foldid=foldid
 for(dist in c("gaussian","binomial")){
   
   testthat::test_that("cross-validated loss",{
-    a <- fit[[dist]]$sigma.cvm
+    a <- fit[[dist]]$cvm
     b <- net[[dist]]$cvm
     diff <- abs(a[seq_along(b)]-b)
     testthat::expect_true(all(diff<1e-06))
@@ -84,11 +84,15 @@ testthat::test_that("plot function",{
 })
 
 testthat::test_that("hidden compare function",{
-  res <- cornet:::.compare(y=y,cutoff=cutoff,X=X,nfolds=2)
-  cornet:::.check(x=res$resid.pvalue,min=0,max=1,type="vector")
+  res <- cornet::cv.cornet(y=y,cutoff=cutoff,X=X,nfolds.ext=2)
+  min <- min(unlist(res))
+  testthat::expect_gte(object=min,expected=0)
+  max <- max(unlist(res[c("class","mse","mae","auc")]))
+  testthat::expect_lte(object=max,expected=1)
 })
 
 testthat::test_that("hidden test function",{
   p <- cornet:::.test(y=y,cutoff=cutoff,X=X)
-  cornet:::.check(x=p,min=0,max=1,type="scalar")
+  testthat::expect_gte(object=p,expected=0)
+  testthat::expect_lte(object=p,expected=1)
 })

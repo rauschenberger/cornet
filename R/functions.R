@@ -147,7 +147,7 @@ cornet <- function(y,cutoff,X,alpha=1,npi=101,pi=NULL,nsigma=99,sigma=NULL,nfold
    
   #--- sigma sequence ---
   if(is.null(sigma)){
-    fit$sigma <- exp(seq(from=log(0.05*stats::sd(y)),
+    fit$sigma <- exp(seq(from=log(0.05*stats::sd(y)), # decrease 0.05?
                   to=log(10*stats::sd(y)),length.out=nsigma))
   } else {
     fit$sigma <- sigma
@@ -233,7 +233,7 @@ cornet <- function(y,cutoff,X,alpha=1,npi=101,pi=NULL,nsigma=99,sigma=NULL,nfold
       }
     }
     temp <- which(fit$cvm==min(fit$cvm),arr.ind=TRUE,useNames=TRUE)
-    if(nrow(temp)>1){warning("Multiple!",call.=FALSE);temp <- temp[1,,drop=FALSE]}
+    if(nrow(temp)>1){message("Multiple minima.");temp <- temp[1,,drop=FALSE]}
     fit$sigma.min <- fit$sigma[temp[1]]
     fit$pi.min <- fit$pi[temp[2]]
     if(fit$cvm[names(fit$sigma.min),names(fit$pi.min)]!=min(fit$cvm)){stop("Internal error.")}
@@ -463,11 +463,16 @@ predict.cornet <- function(object,newx,type="probability",...){
   .check(x=newx,type="matrix")
   .check(x=type,type="string",values=c("probability","odds","log-odds"))
   
-  # linear and logistic
   prob <- list()
+  
+  # intercept
+  prob$intercept <- as.numeric(stats::predict(object=x$binomial,
+                        newx=newx,type="response")[,"s0"])
+  
+  # linear and logistic
   link <- as.numeric(stats::predict(object=x$gaussian,
                   newx=newx,s=x$gaussian$lambda.min,type="response"))
-  prob$gaussian <- stats::pnorm(q=link,mean=x$cutoff,sd=x$info$sd.y)
+  #prob$gaussian <- stats::pnorm(q=link,mean=x$cutoff,sd=x$info$sd.y) # was active
   prob$binomial <- as.numeric(stats::predict(object=x$binomial,
                   newx=newx,s=x$binomial$lambda.min,type="response"))
   
@@ -615,7 +620,6 @@ predict.cornet <- function(object,newx,type="probability",...){
   #   stop(paste0("Argument \"",name,"\" has invalid column number."),call.=FALSE)
   # }
   
-  
   if(!miss && any(is.na(x))){
     stop(paste0("Argument \"",name,"\" contains missing values."),call.=FALSE)
   }
@@ -636,6 +640,7 @@ predict.cornet <- function(object,newx,type="probability",...){
 
 #--- Application ---------------------------------------------------------------
 
+#' @export
 #' @title
 #' Performance measurement
 #'
@@ -643,75 +648,107 @@ predict.cornet <- function(object,newx,type="probability",...){
 #' Compares models for a continuous response with a cut-off value.
 #' 
 #' @details
-#' Uses k-fold cross-validation,
-#' fits linear, logistic, and combined regression,
-#' calculates different loss functions,
-#' and examines squared deviance residuals.
+#' Computes the cross-validated loss of logistic and combined regression.
 #' 
 #' @inheritParams  cornet
+#' 
+#' @param nfolds.ext
+#' number of external folds
+#' 
+#' @param foldid.int
+#' number of internal folds
+#' 
+#' @param foldid.ext
+#' external fold identifiers\strong{:}
+#' vector of length \eqn{n} with entries
+#' between \eqn{1} and \code{nfolds.ext};
+#' or \code{NULL}
+#' 
+#' @param nfolds.int
+#' internal fold identifiers\strong{:}
+#' vector of length \eqn{n} with entries
+#' between \eqn{1} and \code{nfolds.int};
+#' or \code{NULL}
+#' 
+#' @param ... further arguments passed to
+#' \code{\link[cornet]{cornet}} or \code{\link[glmnet]{glmnet}}
 #' 
 #' @examples
 #' \dontshow{n <- 100; p <- 20
 #' y <- rnorm(n)
 #' X <- matrix(rnorm(n*p),nrow=n,ncol=p)
-#' loss <- cornet:::.compare(y=y,cutoff=0,X=X,nfolds=2)
+#' loss <- cv.cornet(y=y,cutoff=0,X=X,nfolds.ext=2)
 #' loss}
 #' \donttest{n <- 100; p <- 200
 #' y <- rnorm(n)
 #' X <- matrix(rnorm(n*p),nrow=n,ncol=p)
-#' loss <- cornet:::.compare(y=y,cutoff=0,X=X)
+#' loss <- cv.cornet(y=y,cutoff=0,X=X)
 #' loss}
 #' 
-.compare <- function(y,cutoff,X,alpha=1,nfolds=5,foldid=NULL,type.measure="deviance"){
+cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=NULL,foldid.int=NULL,type.measure="deviance",...){
   
   z <- 1*(y > cutoff)
-  if(is.null(foldid)){
-    fold <- palasso:::.folds(y=z,nfolds=nfolds)
+  if(is.null(foldid.ext)){
+    foldid.ext <- palasso:::.folds(y=z,nfolds=nfolds.ext)
   } else {
-    fold <- foldid
+    nfolds.ext <- length(unique(foldid.ext))
   }
   
   #--- cross-validated loss ---
   
-  cols <- c("gaussian","binomial","combined")
+  cols <- c("intercept","binomial","combined") # was with "gaussian" and without "intercept"
   pred <- matrix(data=NA,nrow=length(y),ncol=length(cols),
                  dimnames=list(NULL,cols))
   
-  for(i in seq_len(nfolds)){
-    fit <- cornet::cornet(y=y[fold!=i],cutoff=cutoff,X=X[fold!=i,],alpha=alpha,type.measure=type.measure)
+  for(i in seq_len(nfolds.ext)){
+    
+    y0 <- y[foldid.ext!=i]
+    z0 <- z[foldid.ext!=i]
+    X0 <- X[foldid.ext!=i,]
+    X1 <- X[foldid.ext==i,]
+    
+    if(is.null(foldid.int)){
+      foldid <- palasso:::.folds(y=z0,nfolds=nfolds.int)
+    } else {
+      foldid <- foldid.int[foldid.ext!=i]
+    }
+    
+    fit <- cornet::cornet(y=y0,cutoff=cutoff,X=X0,alpha=alpha,type.measure=type.measure,foldid=foldid,...)
     tryCatch(expr=plot.cornet(fit),error=function(x) NULL)
-    temp <- predict.cornet(fit,newx=X[fold==i,])
+    temp <- predict.cornet(fit,newx=X1)
     if(any(temp<0|temp>1)){stop("Outside unit interval.",call.=FALSE)}
-    model <- colnames(pred)
+    model <- colnames(temp) # was "colnames(pred)"
     for(j in seq_along(model)){
-      pred[fold==i,model[j]] <- temp[[model[j]]]
+      pred[foldid.ext==i,model[j]] <- temp[[model[j]]]
     }
   }
   
   type <- c("deviance","class","mse","mae","auc")
-  loss <- lapply(X=type,FUN=function(x) palasso:::.loss(y=z,fit=pred,family="binomial",type.measure=x,foldid=fold)[[1]])
+  loss <- lapply(X=type,FUN=function(x) palasso:::.loss(y=z,fit=pred,family="binomial",type.measure=x,foldid=foldid.ext)[[1]])
   names(loss) <- type
   
-  #--- deviance residuals ---
-  
-  # squared deviance residuals
-  limit <- 1e-05
-  pred[pred < limit] <- limit
-  pred[pred > 1 - limit] <- 1 - limit
-  res <- -2 * (z * log(pred) + (1 - z) * log(1 - pred))
-  rxs <- res[,"binomial"]
-  rys <- res[,"combined"]
-  
-  # residual increase/decrease
-  loss$resid.factor <- stats::median((rys-rxs)/rxs)
-  
-  # paired test for each fold
-  loss$resid.pvalue <- numeric()
-  for(i in seq_len(nfolds)){
-    cond <- fold==i
-    loss$resid.pvalue[i] <- stats::wilcox.test(x=rxs[cond],y=rys[cond],
-                                               paired=TRUE,alternative="greater")$p.value
-  }
+  # if(FALSE){
+  #   #--- deviance residuals --- (removed during revision)
+  #   
+  #   # squared deviance residuals
+  #   limit <- 1e-05
+  #   pred[pred < limit] <- limit
+  #   pred[pred > 1 - limit] <- 1 - limit
+  #   res <- -2 * (z * log(pred) + (1 - z) * log(1 - pred))
+  #   rxs <- res[,"binomial"]
+  #   rys <- res[,"combined"]
+  #   
+  #   # residual increase/decrease
+  #   loss$resid.factor <- stats::median((rys-rxs)/rxs)
+  #   
+  #   # paired test for each fold
+  #   loss$resid.pvalue <- numeric()
+  #   for(i in seq_len(nfolds.ext)){
+  #     cond <- foldid.ext==i
+  #     loss$resid.pvalue[i] <- stats::wilcox.test(x=rxs[cond],y=rys[cond],
+  #                                                paired=TRUE,alternative="greater")$p.value
+  #   }
+  # }
   
   return(loss)
   
@@ -724,10 +761,10 @@ predict.cornet <- function(object,newx,type="probability",...){
 #' Compares models for a continuous response with a cut-off value.
 #' 
 #' @details
-#' Splits samples into 80% for training and 20% for testing,
+#' Splits samples into \eqn{80%} for training and \eqn{20%} for testing,
 #' calculates squared deviance residuals of logistic and combined regression,
 #' conducts the paired one-sided Wilcoxon signed rank test,
-#' and returns the p-value.
+#' and returns the \eqn{p}-value.
 #' 
 #' @inheritParams cornet
 #' 
@@ -743,7 +780,8 @@ predict.cornet <- function(object,newx,type="probability",...){
   fold <- palasso:::.folds(y=z,nfolds=5)
   fold <- ifelse(fold==1,1,0)
   
-  fit <- cornet::cornet(y=y[fold==0],cutoff=cutoff,X=X[fold==0,],alpha=alpha)
+  fit <- cornet::cornet(y=y[fold==0],cutoff=cutoff,X=X[fold==0,],
+                        alpha=alpha,type.measure=type.measure)
   tryCatch(expr=plot.cornet(fit),error=function(x) NULL)
   pred <- predict.cornet(fit,newx=X[fold==1,])
   if(any(pred<0|pred>1)){stop("Outside unit interval.",call.=FALSE)}
@@ -775,33 +813,94 @@ predict.cornet <- function(object,newx,type="probability",...){
 #' covariate space\strong{:}
 #' positive integer
 #' 
-#' @param prob
-#' (approximate) proportion of causal covariates\strong{:}
+#' @param cor
+#' correlation coefficient \strong{:}
 #' numeric between \eqn{0} and \eqn{1}
 #' 
-#' @param fac
-#' noise factor\strong{:}
-#' positive real number
+#' @param prob
+#' effect proportion\strong{:}
+#' numeric between \eqn{0} and \eqn{1}
+#' 
+#' @param sd
+#' standard deviation\strong{:}
+#' positive numeric
+#' 
+#' @param exp
+#' exponent\strong{:}
+#' positive numeric
+#' 
+#' @param frac
+#' class proportion\strong{:}
+#' numeric between \eqn{0} and \eqn{1}
+#' 
+#' @details
+#' For simulating correlated features (\code{cor}\eqn{>0}),
+#' this function requires the R package MASS
+#' (see \code{\link[MASS]{mvrnorm}}).
 #' 
 #' @return
 #' Returns invisible list with elements \code{y} and \code{X}.
 #' 
 #' @examples
-#' data <- cornet:::.simulate(n=10,p=20,prob=0.2,fac=2)
+#' data <- cornet:::.simulate(n=10,p=20)
 #' names(data)
 #' 
-.simulate <- function(n,p,prob=0.2,fac=1){
-  beta <- stats::rnorm(n=p)
-  cond <- stats::rbinom(n=p,size=1,prob=prob)
-  beta[cond==0] <- 0
-  X <- matrix(stats::rnorm(n=n*p),nrow=n,ncol=p)
+.simulate <- function(n , p, cor = 0, prob = 0.1, sd = 1, exp = 1, frac = 1) {
+  
+  .check(x=n,type="scalar",min=1)
+  .check(x=p,type="scalar",min=1)
+  .check(x=cor,type="scalar",min=0,max=1)
+  .check(x=prob,type="scalar",min=0,max=1)
+  .check(x=sd,type="scalar",min=0)
+  .check(x=exp,type="scalar",min=0)
+  .check(x=frac,type="scalar",min=0,max=1)
+  
+  mu <- rep(x = 0, times = p)
+  Sigma <- matrix(data = NA, nrow = p, ncol = p)
+  Sigma <- cor^abs(row(Sigma) - col(Sigma))
+  diag(Sigma) <- 1
+
+  if (requireNamespace("MASS", quietly = TRUE)) {
+      X <- MASS::mvrnorm(n = n, mu = mu, Sigma = Sigma)
+  } else {
+      if(cor!=0){stop("Correlation requires R package MASS!",call.=FALSE)}
+      X <- vapply(X = mu, FUN = function(x) stats::rnorm(n = n,mean = x),
+                  FUN.VALUE = numeric(n))
+  }  
+    
+  beta <- stats::rbinom(n = p,size = 1, prob = prob)
   mean <- X %*% beta
-  y <- stats::rnorm(n=n,mean=mean,sd=fac*stats::sd(mean))
-  return(invisible(list(y=y,X=X)))
+  y <- stats::rnorm(n = n, mean = mean, sd = sd)
+  y <- sign(y) * abs(y)^exp # departure from normality
+  
+  cutoff <- stats::quantile(y,probs=frac)
+  
+  list <- list(y = y, X = X, cutoff = cutoff)
+  return(invisible(list))
 }
 
 
+
 #--- Legacy --------------------------------------------------------------------
+
+# @param prob
+# (approximate) proportion of causal covariates\strong{:}
+# numeric between \eqn{0} and \eqn{1}
+# 
+# @param fac
+# noise factor\strong{:}
+# positive real number
+# 
+#.simulate <- function(n,p,prob=0.2,fac=1){
+#  beta <- stats::rnorm(n=p)
+#  cond <- stats::rbinom(n=p,size=1,prob=prob)
+#  beta[cond==0] <- 0
+#  X <- matrix(stats::rnorm(n=n*p),nrow=n,ncol=p)
+#  mean <- X %*% beta
+#  y <- stats::rnorm(n=n,mean=mean,sd=fac*stats::sd(mean))
+#  return(invisible(list(y=y,X=X)))
+#}
+
 
 # # Import this function from the palasso package.
 # .loss <- function (y,fit,family,type.measure,foldid=NULL){

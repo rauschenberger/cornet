@@ -27,12 +27,6 @@ or \code{"class"} (see \code{\link[glmnet]{cv.glmnet}})}
 \description{
 Compares models for a continuous response with a cut-off value.
 }
-\details{
-Splits samples into 80% for training and 20% for testing,
-calculates squared deviance residuals of logistic and combined regression,
-conducts the paired one-sided Wilcoxon signed rank test,
-and returns the p-value.
-}
 \examples{
 n <- 100; p <- 200
 y <- rnorm(n)

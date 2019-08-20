@@ -40,4 +40,4 @@ devtools::install_github("rauschenberger/cornet")
 
 ## Reference
 
-Armin Rauschenberger and Enrico Glaab (2019). "Lasso and ridge regression for dichotomised outcomes". *Manuscript in preparation.*
+Armin Rauschenberger and Enrico Glaab (2019). "Predicting artificial binary outcomes from high-dimensional data". *Manuscript in preparation.*

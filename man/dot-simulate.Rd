@@ -4,7 +4,7 @@
 \alias{.simulate}
 \title{Data simulation}
 \usage{
-.simulate(n, p, prob = 0.2, fac = 1)
+.simulate(n, p, cor = 0, prob = 0.1, sd = 1, exp = 1, frac = 1)
 }
 \arguments{
 \item{n}{sample size\strong{:}
@@ -13,11 +13,20 @@ positive integer}
 \item{p}{covariate space\strong{:}
 positive integer}
 
-\item{prob}{(approximate) proportion of causal covariates\strong{:}
+\item{cor}{correlation coefficient \strong{:}
 numeric between \eqn{0} and \eqn{1}}
 
-\item{fac}{noise factor\strong{:}
-positive real number}
+\item{prob}{effect proportion\strong{:}
+numeric between \eqn{0} and \eqn{1}}
+
+\item{sd}{standard deviation\strong{:}
+positive numeric}
+
+\item{exp}{exponent\strong{:}
+positive numeric}
+
+\item{frac}{class proportion\strong{:}
+numeric between \eqn{0} and \eqn{1}}
 }
 \value{
 Returns invisible list with elements \code{y} and \code{X}.
@@ -25,8 +34,13 @@ Returns invisible list with elements \code{y} and \code{X}.
 \description{
 Simulates data for unit tests
 }
+\details{
+For simulating correlated features (\code{cor}\eqn{>0}),
+this function requires the R package MASS
+(see \code{\link[MASS]{mvrnorm}}).
+}
 \examples{
-data <- cornet:::.simulate(n=10,p=20,prob=0.2,fac=2)
+data <- cornet:::.simulate(n=10,p=20)
 names(data)
 
 }
