@@ -53,12 +53,12 @@ Computes the cross-validated loss of logistic and combined regression.
 \dontshow{n <- 100; p <- 20
 y <- rnorm(n)
 X <- matrix(rnorm(n*p),nrow=n,ncol=p)
-loss <- cornet:::cv.cornet(y=y,cutoff=0,X=X,nfolds.ext=2)
+loss <- cv.cornet(y=y,cutoff=0,X=X,nfolds.ext=2)
 loss}
 \donttest{n <- 100; p <- 200
 y <- rnorm(n)
 X <- matrix(rnorm(n*p),nrow=n,ncol=p)
-loss <- cornet:::cv.cornet(y=y,cutoff=0,X=X)
+loss <- cv.cornet(y=y,cutoff=0,X=X)
 loss}
 
 }

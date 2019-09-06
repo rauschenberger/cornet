@@ -8,10 +8,12 @@
 
 <title>Performance measurement — cv.cornet • cornet</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/spacelab/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
@@ -30,10 +32,11 @@
 
 
 
-<meta property="og:title" content="Performance measurement — cv.cornet" />
 
+<meta property="og:title" content="Performance measurement — cv.cornet" />
 <meta property="og:description" content="Compares models for a continuous response with a cut-off value." />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -82,7 +85,6 @@
   <a href="../news/index.html">news</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/rauschenberger/cornet">
@@ -114,15 +116,13 @@
     </div>
 
     <div class="ref-description">
-    
     <p>Compares models for a continuous response with a cut-off value.</p>
-    
     </div>
 
     <pre class="usage"><span class='fu'>cv.cornet</span>(<span class='no'>y</span>, <span class='no'>cutoff</span>, <span class='no'>X</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>nfolds.ext</span> <span class='kw'>=</span> <span class='fl'>5</span>, <span class='kw'>nfolds.int</span> <span class='kw'>=</span> <span class='fl'>10</span>,
   <span class='kw'>foldid.ext</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>foldid.int</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>type.measure</span> <span class='kw'>=</span> <span class='st'>"deviance"</span>,
   <span class='no'>...</span>)</pre>
-    
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -181,17 +181,16 @@ or <code>"class"</code> (see <code><a href='https://www.rdocumentation.org/packa
 <code><a href='cornet.html'>cornet</a></code> or <code><a href='https://www.rdocumentation.org/packages/glmnet/topics/glmnet'>glmnet</a></code></p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Computes the cross-validated loss of logistic and combined regression.</p>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>n</span> <span class='kw'>&lt;-</span> <span class='fl'>100</span>; <span class='no'>p</span> <span class='kw'>&lt;-</span> <span class='fl'>200</span>
 <span class='no'>y</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>rnorm</a></span>(<span class='no'>n</span>)
 <span class='no'>X</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/matrix'>matrix</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>rnorm</a></span>(<span class='no'>n</span>*<span class='no'>p</span>),<span class='kw'>nrow</span><span class='kw'>=</span><span class='no'>n</span>,<span class='kw'>ncol</span><span class='kw'>=</span><span class='no'>p</span>)
-<span class='no'>loss</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>cornet</span><span class='kw ns'>:::</span><span class='fu'><a href='https://www.rdocumentation.org/packages/cornet/topics/cv.cornet'>cv.cornet</a></span>(<span class='kw'>y</span><span class='kw'>=</span><span class='no'>y</span>,<span class='kw'>cutoff</span><span class='kw'>=</span><span class='fl'>0</span>,<span class='kw'>X</span><span class='kw'>=</span><span class='no'>X</span>)</div><div class='img'><img src='cv.cornet-1.png' alt='' width='700' height='433' /></div><div class='img'><img src='cv.cornet-2.png' alt='' width='700' height='433' /></div><div class='img'><img src='cv.cornet-3.png' alt='' width='700' height='433' /></div><div class='img'><img src='cv.cornet-4.png' alt='' width='700' height='433' /></div><div class='img'><img src='cv.cornet-5.png' alt='' width='700' height='433' /></div><div class='input'><span class='no'>loss</span></div><div class='output co'>#&gt; $deviance
+<span class='no'>loss</span> <span class='kw'>&lt;-</span> <span class='fu'>cv.cornet</span>(<span class='kw'>y</span><span class='kw'>=</span><span class='no'>y</span>,<span class='kw'>cutoff</span><span class='kw'>=</span><span class='fl'>0</span>,<span class='kw'>X</span><span class='kw'>=</span><span class='no'>X</span>)</div><div class='img'><img src='cv.cornet-1.png' alt='' width='700' height='433' /></div><div class='img'><img src='cv.cornet-2.png' alt='' width='700' height='433' /></div><div class='img'><img src='cv.cornet-3.png' alt='' width='700' height='433' /></div><div class='img'><img src='cv.cornet-4.png' alt='' width='700' height='433' /></div><div class='img'><img src='cv.cornet-5.png' alt='' width='700' height='433' /></div><div class='input'><span class='no'>loss</span></div><div class='output co'>#&gt; $deviance
 #&gt; intercept  binomial  combined 
 #&gt;  1.384921  1.422387  1.493403 
 #&gt; 
@@ -217,9 +216,7 @@ or <code>"class"</code> (see <code><a href='https://www.rdocumentation.org/packa
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#details">Details</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 

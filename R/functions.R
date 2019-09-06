@@ -765,6 +765,9 @@ cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=N
 #' calculates squared deviance residuals of logistic and combined regression,
 #' conducts the paired one-sided Wilcoxon signed rank test,
 #' and returns the \eqn{p}-value.
+#' For the multi-split test,
+#' use the median \eqn{p}-value from \eqn{50} single-split tests
+#' (van de Wiel 2009).
 #' 
 #' @inheritParams cornet
 #' 
@@ -786,15 +789,15 @@ cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=N
   pred <- predict.cornet(fit,newx=X[fold==1,])
   if(any(pred<0|pred>1)){stop("Outside unit interval.",call.=FALSE)}
   
-  #res <- (pred-z[fold==1])^2 # MSE
-  #pvalue <- wilcox.test(x=res[,"binomial"],y=res[,"combined"],paired=TRUE,alternative="greater")$p.value
-  #colMeans(abs(pred-0.5)) # distance from 0.5
-  
   limit <- 1e-05
   pred[pred < limit] <- limit
   pred[pred > 1 - limit] <- 1 - limit
   res <- -2 * (z[fold==1] * log(pred) + (1 - z[fold==1]) * log(1 - pred))
   pvalue <- stats::wilcox.test(x=res[,"binomial"],y=res[,"combined"],paired=TRUE,alternative="greater")$p.value
+  
+  ##equality logistic deviance
+  #colMeans(res)
+  #palasso:::.loss(y=z[fold==1],fit=pred,family="binomial",type.measure="deviance")
   
   return(pvalue)
 }
@@ -879,9 +882,11 @@ cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=N
   return(invisible(list))
 }
 
-
-
 #--- Legacy --------------------------------------------------------------------
+
+# multi.split <- function(...,n=50){
+#  median(replicate(n=n,expr=cornet:::.test(...)))
+# }
 
 # @param prob
 # (approximate) proportion of causal covariates\strong{:}
@@ -900,7 +905,6 @@ cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=N
 #  y <- stats::rnorm(n=n,mean=mean,sd=fac*stats::sd(mean))
 #  return(invisible(list(y=y,X=X)))
 #}
-
 
 # # Import this function from the palasso package.
 # .loss <- function (y,fit,family,type.measure,foldid=NULL){

@@ -107,11 +107,11 @@
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="co">#install.packages("BiocManager")</span></a>
 <a class="sourceLine" id="cb4-2" title="2"><span class="co">#BiocManager::install(c("GEOquery","Biobase"))</span></a>
 <a class="sourceLine" id="cb4-3" title="3">data &lt;-<span class="st"> </span>GEOquery<span class="op">::</span><span class="kw">getGEO</span>(<span class="dt">GEO=</span><span class="st">"GSE80599"</span>)[[<span class="dv">1</span>]]</a>
-<a class="sourceLine" id="cb4-4" title="4">pheno &lt;-<span class="st"> </span>Biobase<span class="op">::</span><span class="kw">pData</span>(data)</a>
+<a class="sourceLine" id="cb4-4" title="4">pheno &lt;-<span class="st"> </span>Biobase<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/Biobase/topics/phenoData">pData</a></span>(data)</a>
 <a class="sourceLine" id="cb4-5" title="5">y &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/numeric">as.numeric</a></span>(pheno<span class="op">$</span><span class="st">`</span><span class="dt">updrs-mds3.12 score:ch1</span><span class="st">`</span>)</a>
 <a class="sourceLine" id="cb4-6" title="6">age &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/numeric">as.numeric</a></span>(pheno<span class="op">$</span><span class="st">`</span><span class="dt">age at examination (years):ch1</span><span class="st">`</span>)</a>
 <a class="sourceLine" id="cb4-7" title="7">gender &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/ifelse">ifelse</a></span>(pheno<span class="op">$</span><span class="st">`</span><span class="dt">gender:ch1</span><span class="st">`</span><span class="op">==</span><span class="st">"Female"</span>,<span class="dv">1</span>,<span class="dv">0</span>)</a>
-<a class="sourceLine" id="cb4-8" title="8">X &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/cbind">cbind</a></span>(age,gender,<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/t">t</a></span>(Biobase<span class="op">::</span><span class="kw">exprs</span>(data)))</a></code></pre></div>
+<a class="sourceLine" id="cb4-8" title="8">X &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/cbind">cbind</a></span>(age,gender,<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/t">t</a></span>(Biobase<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/Biobase/topics/exprs">exprs</a></span>(data)))</a></code></pre></div>
 <p>The vector <span class="math inline">\(\boldsymbol{y}\)</span> of length <span class="math inline">\(n\)</span> represents the outcome, and the matrix <span class="math inline">\(\boldsymbol{X}\)</span> with <span class="math inline">\(n\)</span> rows and <span class="math inline">\(p\)</span> columns represents the features. The first two columns include demographic variables (age, gender), and the other columns include the gene expression data.</p>
 </div>
 <div id="filter" class="section level2">
@@ -219,6 +219,7 @@ sapply(loss,function(x) x$deviance)
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+
         <div id="tocnav">
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>

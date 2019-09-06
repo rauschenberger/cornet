@@ -8,10 +8,12 @@
 
 <title>Extract estimated coefficients — coef.cornet • cornet</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/spacelab/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
@@ -30,11 +32,12 @@
 
 
 
-<meta property="og:title" content="Extract estimated coefficients — coef.cornet" />
 
+<meta property="og:title" content="Extract estimated coefficients — coef.cornet" />
 <meta property="og:description" content="Extracts estimated coefficients from linear and logistic regression,
 under the penalty parameter that minimises the cross-validated loss." />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -83,7 +86,6 @@ under the penalty parameter that minimises the cross-validated loss." />
   <a href="../news/index.html">news</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/rauschenberger/cornet">
@@ -115,15 +117,13 @@ under the penalty parameter that minimises the cross-validated loss." />
     </div>
 
     <div class="ref-description">
-    
     <p>Extracts estimated coefficients from linear and logistic regression,
 under the penalty parameter that minimises the cross-validated loss.</p>
-    
     </div>
 
     <pre class="usage"><span class='co'># S3 method for cornet</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/coef'>coef</a></span>(<span class='no'>object</span>, <span class='no'>...</span>)</pre>
-    
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -136,14 +136,13 @@ under the penalty parameter that minimises the cross-validated loss.</p>
       <td><p>further arguments (not applicable)</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>This function returns a matrix with \(n\) rows and two columns,
 where \(n\) is the sample size. It includes the estimated coefficients
 from linear regression (1st column: <code>"beta"</code>)
 and logistic regression (2nd column: <code>"gamma"</code>).</p>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>n</span> <span class='kw'>&lt;-</span> <span class='fl'>100</span>; <span class='no'>p</span> <span class='kw'>&lt;-</span> <span class='fl'>200</span>
@@ -358,9 +357,7 @@ and logistic regression (2nd column: <code>"gamma"</code>).</p>
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 

@@ -8,10 +8,12 @@
 
 <title>Combined regression — cornet • cornet</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/spacelab/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
@@ -30,12 +32,13 @@
 
 
 
-<meta property="og:title" content="Combined regression — cornet" />
 
+<meta property="og:title" content="Combined regression — cornet" />
 <meta property="og:description" content="Implements lasso and ridge regression for dichotomised outcomes.
 Such outcomes are not naturally but artificially binary.
 They indicate whether an underlying measurement is greater than a threshold." />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -84,7 +87,6 @@ They indicate whether an underlying measurement is greater than a threshold." />
   <a href="../news/index.html">news</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/rauschenberger/cornet">
@@ -116,17 +118,15 @@ They indicate whether an underlying measurement is greater than a threshold." />
     </div>
 
     <div class="ref-description">
-    
     <p>Implements lasso and ridge regression for dichotomised outcomes.
 Such outcomes are not naturally but artificially binary.
 They indicate whether an underlying measurement is greater than a threshold.</p>
-    
     </div>
 
     <pre class="usage"><span class='fu'>cornet</span>(<span class='no'>y</span>, <span class='no'>cutoff</span>, <span class='no'>X</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>npi</span> <span class='kw'>=</span> <span class='fl'>101</span>, <span class='kw'>pi</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>nsigma</span> <span class='kw'>=</span> <span class='fl'>99</span>,
   <span class='kw'>sigma</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>nfolds</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>foldid</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>type.measure</span> <span class='kw'>=</span> <span class='st'>"deviance"</span>, <span class='no'>...</span>)</pre>
-    
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -193,7 +193,7 @@ or <code>"class"</code> (see <code><a href='https://www.rdocumentation.org/packa
       <td><p>further arguments passed to <code><a href='https://www.rdocumentation.org/packages/glmnet/topics/glmnet'>glmnet</a></code></p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>Returns an object of class <code>cornet</code>, a list with multiple slots:</p><ul>
@@ -212,7 +212,6 @@ or <code>"class"</code> (see <code><a href='https://www.rdocumentation.org/packa
 <li><p><code>cutoff</code>: threshold for dichotomisation</p></li>
 </ul>
 
-    
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>The argument <code>family</code> is unavailable, because
@@ -222,19 +221,16 @@ and a <em>binomial</em> model for the binary response.</p>
 but the loss is incomparable between linear and logistic regression.</p>
 <p>The loss function <code>"auc"</code> is unavailable for internal cross-validation.
 If at all, use <code>"auc"</code> for external cross-validation only.</p>
-    
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Armin Rauschenberger and Enrico Glaab (2019).
 "Lasso and ridge regression for dichotomised outcomes".
 <em>Manuscript in preparation</em>.</p>
-    
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Methods for objects of class <code>cornet</code> include
 <code><a href='coef.cornet.html'>coef</a></code> and
 <code><a href='predict.cornet.html'>predict</a></code>.</p></div>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>n</span> <span class='kw'>&lt;-</span> <span class='fl'>100</span>; <span class='no'>p</span> <span class='kw'>&lt;-</span> <span class='fl'>200</span>
@@ -253,15 +249,10 @@ If at all, use <code>"auc"</code> for external cross-validation only.</p>
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-
       <li><a href="#details">Details</a></li>
-
       <li><a href="#references">References</a></li>
-
       <li><a href="#see-also">See also</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 
