@@ -761,7 +761,8 @@ cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=N
 #' Compares models for a continuous response with a cut-off value.
 #' 
 #' @details
-#' Splits samples into \eqn{80%} for training and \eqn{20%} for testing,
+#' Splits samples into \eqn{80} percent for training
+#' and \eqn{20} percent for testing,
 #' calculates squared deviance residuals of logistic and combined regression,
 #' conducts the paired one-sided Wilcoxon signed rank test,
 #' and returns the \eqn{p}-value.

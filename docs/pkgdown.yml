@@ -2,6 +2,8 @@ pandoc: 2.7.2
 pkgdown: 1.3.0
 pkgdown_sha: ~
 articles:
+  application: application.html
   article: article.html
+  simulation: simulation.html
   vignette: vignette.html
 

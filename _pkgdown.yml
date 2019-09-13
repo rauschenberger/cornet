@@ -20,6 +20,10 @@ navbar:
       href: articles/vignette.html
     - text: "article"
       href: articles/article.html
+    - text: "simulation"
+      href: articles/simulation.html
+    - text: "application"
+      href: articles/application.html
     - text: "news"
       href: news/index.html
   right:
