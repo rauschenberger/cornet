@@ -1,4 +1,4 @@
 
 # Changes
 
-- rounding for platform-independent results
+- platform-independent results
