@@ -1,6 +1,8 @@
-## cornet 0.0.3 (2019-10-01)
+## cornet 0.0.3 (2019-10-02)
 
-* rounding before and after MASS::mvrnorm
+* replace MASS::mvrnorm by mvtnorm::rmvnorm
+* rounding of simulated data
+* rounding of cross-validated loss
 
 ## cornet 0.0.2 (2019-09-26)
 

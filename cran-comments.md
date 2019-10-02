@@ -1,4 +1,4 @@
 
 # Changes
 
-- rounding for reproducibility
+- rounding for platform-independent results
