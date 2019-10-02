@@ -750,6 +750,8 @@ cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=N
   #   }
   # }
   
+  loss <- lapply(loss,function(x) signif(x,digits=6)) # trial stability
+  
   return(loss)
   
 }
@@ -863,16 +865,21 @@ cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=N
   Sigma <- matrix(data = NA, nrow = p, ncol = p)
   Sigma <- cor^abs(row(Sigma) - col(Sigma))
   diag(Sigma) <- 1
-  Sigma <- round(Sigma,digits=5) #--- stability (2019-10-01) ---
   
-  if (requireNamespace("MASS", quietly = TRUE)) {
-      X <- MASS::mvrnorm(n = n, mu = mu, Sigma = Sigma)
+  #warning("DEACTIVE THIS!")
+  #Sigma <- round(Sigma,digits=5)
+  #X <- mvtnorm::rmvnorm(n = n, mean = mu, sigma = Sigma,method = "chol")
+  #X <- round(X,digits=5)
+  
+  #if (requireNamespace("MASS", quietly = TRUE)) {
+  #    X <- MASS::mvrnorm(n = n, mu = mu, Sigma = Sigma) # not reproducible
+  if (requireNamespace("mvtnorm", quietly = TRUE)) {
+      X <- mvtnorm::rmvnorm(n = n, mean = mu, sigma = Sigma)    
   } else {
-      if(cor!=0){stop("Correlation requires R package MASS!",call.=FALSE)}
+      if(cor!=0){stop("Correlation requires R package mvtnorm!",call.=FALSE)}
       X <- vapply(X = mu, FUN = function(x) stats::rnorm(n = n,mean = x),
                   FUN.VALUE = numeric(n))
   }
-  X <- round(X,digits=5) #--- stability (2019-10-01) ---
   
   beta <- stats::rbinom(n = p,size = 1, prob = prob)
   mean <- X %*% beta
@@ -882,6 +889,8 @@ cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=N
   cutoff <- stats::quantile(y,probs=frac)
   
   list <- list(y = y, X = X, cutoff = cutoff)
+  list <- lapply(list,function(x) signif(x,digits=6)) # trial stability
+  # or use signif?
   return(invisible(list))
 }
 

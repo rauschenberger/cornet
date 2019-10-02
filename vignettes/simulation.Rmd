@@ -9,11 +9,12 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
 ---
 
-This script requires that the working directory includes the folders "data", "results", and "manuscript".
+This script requires that the working directory includes the folders "data", "results", and "manuscript". We obtained our results using R 3.6.1 (2019-07-05) with cornet 0.0.3 (2019-10-02) on a local machine (x86_64-w64-mingw32/x64, Windows 10 x64). Rounding errors might lead to slightly different results on other machines, but we have minimised this problem by rounding the simulated data and the cross-validated errors to six significant digits.
 
 ```{r setup,include=FALSE}
 knitr::opts_chunk$set(echo=TRUE,eval=FALSE)
-#setwd("") # adapt!
+setwd("C:/Users/armin.rauschenberger/Desktop/cornet") # local drive
+#setwd("Z:/Rauschenberger/cornet/BIOINF_20XX-XX-XX") # shared drive
 #devtools::install_github("rauschenberger/cornet")
 ```
 

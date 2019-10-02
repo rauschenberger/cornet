@@ -9,13 +9,13 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
 ---
 
-This script requires that the working directory includes the folders "data", "results", and "manuscript", with the files "PPMI_Baseline_Data_02Jul2018.csv", "PPMI_Year_1-3_Data_02Jul2018.csv" and "PPMI_Data_Dictionary_for_Baseline_Dataset_Jul2018.csv" in the folder "data".
+This script requires that the working directory includes the folders "data", "results", and "manuscript", with the files "PPMI_Baseline_Data_02Jul2018.csv", "PPMI_Year_1-3_Data_02Jul2018.csv" and "PPMI_Data_Dictionary_for_Baseline_Dataset_Jul2018.csv" in the folder "data". We obtained our results using R 3.6.1 (2019-07-05) with cornet 0.0.3 (2019-10-02) on a local machine (x86_64-w64-mingw32/x64, Windows 10 x64).
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo=TRUE,eval=FALSE)
-#setwd("") # adapt!
+setwd("C:/Users/armin.rauschenberger/Desktop/cornet") # local drive
+#setwd("Z:/Rauschenberger/cornet/BIOINF_20XX-XX-XX") # shared drive
 #utils::install.packages(pkgs=c("devtools","missRanger","xtable"))
-#devtools::install_github("rauschenberger/palasso")
 #devtools::install_github("rauschenberger/cornet")
 ```
 

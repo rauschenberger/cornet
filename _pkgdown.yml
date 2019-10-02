@@ -46,3 +46,4 @@ reference:
       - .test
       - .equal
       - .check
+      - .simulate

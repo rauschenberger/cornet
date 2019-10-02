@@ -5,7 +5,7 @@ Description: Implements lasso and ridge regression for dichotomised outcomes (Ra
 Depends: R (>= 3.0.0)
 Imports: glmnet, palasso
 Suggests: knitr, testthat
-Enhances: RColorBrewer, MASS
+Enhances: RColorBrewer, MASS, mvtnorm
 Authors@R: person("Armin","Rauschenberger",email="a.rauschenberger@vumc.nl",role=c("aut","cre"))
 VignetteBuilder: knitr
 License: GPL-3
