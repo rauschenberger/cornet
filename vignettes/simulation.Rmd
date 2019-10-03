@@ -9,7 +9,7 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
 ---
 
-This script requires that the working directory includes the folders "data", "results", and "manuscript". We obtained our results using R 3.6.1 (2019-07-05) with cornet 0.0.3 (2019-10-02) on a local machine (x86_64-w64-mingw32/x64, Windows 10 x64). Rounding errors might lead to slightly different results on other machines, but we have minimised this problem by rounding the simulated data and the cross-validated errors to six significant digits.
+This script requires that the working directory includes the folders "data", "results", and "manuscript". We obtained our results using R 3.6.1 (2019-07-05) with cornet 0.0.3 (2019-10-02) on a local machine (x86_64-w64-mingw32/x64, Windows 10 x64), and verified them on a virtual machine (x86_64-pc-linux-gnu, Ubuntu 16.04.6). Floating point errors might lead to slightly different results on other platforms.
 
 ```{r setup,include=FALSE}
 knitr::opts_chunk$set(echo=TRUE,eval=FALSE)
@@ -81,6 +81,9 @@ grDevices::dev.off()
 
 sapply(fuse1,function(x) mean(x<0)) # lasso
 sapply(fuse0,function(x) mean(x<0)) # ridge
+
+sapply(fuse1,function(x) mean(x==0)) # lasso
+sapply(fuse0,function(x) mean(x==0)) # ridge
 ```
 
 ```{r figure_TAB}
