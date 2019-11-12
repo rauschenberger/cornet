@@ -328,10 +328,12 @@ coef.cornet <- function(object,...){
   if(length(list(...))!=0){warning("Ignoring arguments.")}
   
   s <- object$gaussian$lambda.min
-  beta <- glmnet::coef.glmnet(object=object$gaussian,s=s)
+  #beta <- glmnet::coef.glmnet(object=object$gaussian,s=s)
+  beta <- stats::coef(object=object$gaussian,s=s)
   
   s <- object$binomial$lambda.min
-  gamma <- glmnet::coef.glmnet(object=object$binomial,s=s)
+  #gamma <- glmnet::coef.glmnet(object=object$binomial,s=s)
+  gamma <- stats::coef(object=object$binomial,s=s)
   
   coef <- cbind(beta,gamma)
   colnames(coef) <- c("beta","gamma")

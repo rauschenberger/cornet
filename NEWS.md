@@ -1,3 +1,7 @@
+## cornet 0.0.3 (2019-11-12)
+
+* changed glmnet exports
+
 ## cornet 0.0.3 (2019-10-02)
 
 * replace MASS::mvrnorm by mvtnorm::rmvnorm
