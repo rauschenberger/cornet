@@ -197,51 +197,13 @@ or <code>"class"</code> (see <code><a href='https://rdrr.io/pkg/glmnet/man/cv.gl
     <p>Computes the cross-validated loss of logistic and combined regression.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>n</span> <span class='kw'>&lt;-</span> <span class='fl'>50</span>; <span class='no'>p</span> <span class='kw'>&lt;-</span> <span class='fl'>20</span>
-<span class='no'>y</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='no'>n</span>)
-<span class='no'>X</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='no'>n</span>*<span class='no'>p</span>),<span class='kw'>nrow</span><span class='kw'>=</span><span class='no'>n</span>,<span class='kw'>ncol</span><span class='kw'>=</span><span class='no'>p</span>)
-<span class='no'>loss</span> <span class='kw'>&lt;-</span> <span class='fu'>cv.cornet</span>(<span class='kw'>y</span><span class='kw'>=</span><span class='no'>y</span>,<span class='kw'>cutoff</span><span class='kw'>=</span><span class='fl'>0</span>,<span class='kw'>X</span><span class='kw'>=</span><span class='no'>X</span>,<span class='kw'>nfolds.ext</span><span class='kw'>=</span><span class='fl'>2</span>)</div><div class='output co'>#&gt; <span class='message'>Multiple minima.</span></div><div class='img'><img src='cv.cornet-1.png' alt='' width='700' height='433' /></div><div class='img'><img src='cv.cornet-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='no'>loss</span></div><div class='output co'>#&gt; $deviance
-#&gt; intercept  binomial  combined 
-#&gt;   1.38469   1.41454   1.41904 
-#&gt; 
-#&gt; $class
-#&gt; intercept  binomial  combined 
-#&gt;      0.48      0.52      0.48 
-#&gt; 
-#&gt; $mse
-#&gt; intercept  binomial  combined 
-#&gt;  0.499200  0.511970  0.513667 
-#&gt; 
-#&gt; $mae
-#&gt; intercept  binomial  combined 
-#&gt;  0.998400  0.999186  0.996980 
-#&gt; 
-#&gt; $auc
-#&gt; intercept  binomial  combined 
-#&gt;  0.500000  0.496795  0.532051 
-#&gt; </div><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) <span class='no'>n</span> <span class='kw'>&lt;-</span> <span class='fl'>100</span>; <span class='no'>p</span> <span class='kw'>&lt;-</span> <span class='fl'>200</span>
-<span class='no'>y</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='no'>n</span>)
-<span class='no'>X</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='no'>n</span>*<span class='no'>p</span>),<span class='kw'>nrow</span><span class='kw'>=</span><span class='no'>n</span>,<span class='kw'>ncol</span><span class='kw'>=</span><span class='no'>p</span>)
-<span class='no'>loss</span> <span class='kw'>&lt;-</span> <span class='fu'>cv.cornet</span>(<span class='kw'>y</span><span class='kw'>=</span><span class='no'>y</span>,<span class='kw'>cutoff</span><span class='kw'>=</span><span class='fl'>0</span>,<span class='kw'>X</span><span class='kw'>=</span><span class='no'>X</span>)</div><div class='img'><img src='cv.cornet-3.png' alt='' width='700' height='433' /></div><div class='img'><img src='cv.cornet-4.png' alt='' width='700' height='433' /></div><div class='img'><img src='cv.cornet-5.png' alt='' width='700' height='433' /></div><div class='img'><img src='cv.cornet-6.png' alt='' width='700' height='433' /></div><div class='img'><img src='cv.cornet-7.png' alt='' width='700' height='433' /></div><div class='input'><span class='no'>loss</span></div><div class='output co'>#&gt; $deviance
-#&gt; intercept  binomial  combined 
-#&gt;   1.38605   1.38605   1.39343 
-#&gt; 
-#&gt; $class
-#&gt; intercept  binomial  combined 
-#&gt;      0.48      0.48      0.50 
-#&gt; 
-#&gt; $mse
-#&gt; intercept  binomial  combined 
-#&gt;  0.499875  0.499875  0.503556 
-#&gt; 
-#&gt; $mae
-#&gt; intercept  binomial  combined 
-#&gt;  0.998999  0.998999  1.001730 
-#&gt; 
-#&gt; $auc
-#&gt; intercept  binomial  combined 
-#&gt;       0.5       0.5       0.5 
-#&gt; </div><div class='input'>
+    <pre class="examples"><div class='input'><span class='co'>#n &lt;- 50; p &lt;- 20</span>
+<span class='co'>#y &lt;- rnorm(n)</span>
+<span class='co'>#X &lt;- matrix(rnorm(n*p),nrow=n,ncol=p)</span>
+<span class='co'>#loss &lt;- cv.cornet(y=y,cutoff=0,X=X,nfolds.ext=2)</span>
+<span class='co'>#loss</span>
+<span class='kw'>if</span> (<span class='fl'>FALSE</span>) <span class='no'>n</span> <span class='kw'>&lt;-</span> <span class='fl'>100</span>; <span class='no'>p</span> <span class='kw'>&lt;-</span> <span class='fl'>200</span>
+<span class='no'>y</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='no'>n</span>)</div><div class='output co'>#&gt; <span class='error'>Error in rnorm(n): object 'n' not found</span></div><div class='input'><span class='no'>X</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='no'>n</span>*<span class='no'>p</span>),<span class='kw'>nrow</span><span class='kw'>=</span><span class='no'>n</span>,<span class='kw'>ncol</span><span class='kw'>=</span><span class='no'>p</span>)</div><div class='output co'>#&gt; <span class='error'>Error in rnorm(n * p): object 'n' not found</span></div><div class='input'><span class='no'>loss</span> <span class='kw'>&lt;-</span> <span class='fu'>cv.cornet</span>(<span class='kw'>y</span><span class='kw'>=</span><span class='no'>y</span>,<span class='kw'>cutoff</span><span class='kw'>=</span><span class='fl'>0</span>,<span class='kw'>X</span><span class='kw'>=</span><span class='no'>X</span>)</div><div class='output co'>#&gt; <span class='error'>Error in cv.cornet(y = y, cutoff = 0, X = X): object 'y' not found</span></div><div class='input'><span class='no'>loss</span></div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): object 'loss' not found</span></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

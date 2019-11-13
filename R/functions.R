@@ -676,11 +676,11 @@ predict.cornet <- function(object,newx,type="probability",...){
 #' \code{\link[cornet]{cornet}} or \code{\link[glmnet]{glmnet}}
 #' 
 #' @examples
-#' \dontshow{n <- 50; p <- 20
-#' y <- rnorm(n)
-#' X <- matrix(rnorm(n*p),nrow=n,ncol=p)
-#' loss <- cv.cornet(y=y,cutoff=0,X=X,nfolds.ext=2)
-#' loss}
+#' \dontshow{#n <- 50; p <- 20
+#' #y <- rnorm(n)
+#' #X <- matrix(rnorm(n*p),nrow=n,ncol=p)
+#' #loss <- cv.cornet(y=y,cutoff=0,X=X,nfolds.ext=2)
+#' #loss}
 #' \dontrun{n <- 100; p <- 200
 #' y <- rnorm(n)
 #' X <- matrix(rnorm(n*p),nrow=n,ncol=p)

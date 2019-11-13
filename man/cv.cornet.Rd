@@ -50,11 +50,11 @@ Compares models for a continuous response with a cut-off value.
 Computes the cross-validated loss of logistic and combined regression.
 }
 \examples{
-\dontshow{n <- 50; p <- 20
-y <- rnorm(n)
-X <- matrix(rnorm(n*p),nrow=n,ncol=p)
-loss <- cv.cornet(y=y,cutoff=0,X=X,nfolds.ext=2)
-loss}
+\dontshow{#n <- 50; p <- 20
+#y <- rnorm(n)
+#X <- matrix(rnorm(n*p),nrow=n,ncol=p)
+#loss <- cv.cornet(y=y,cutoff=0,X=X,nfolds.ext=2)
+#loss}
 \dontrun{n <- 100; p <- 200
 y <- rnorm(n)
 X <- matrix(rnorm(n*p),nrow=n,ncol=p)
