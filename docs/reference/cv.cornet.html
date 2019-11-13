@@ -219,28 +219,28 @@ or <code>"class"</code> (see <code><a href='https://rdrr.io/pkg/glmnet/man/cv.gl
 #&gt; $auc
 #&gt; intercept  binomial  combined 
 #&gt;  0.500000  0.496795  0.532051 
-#&gt; </div><div class='input'><span class='no'>n</span> <span class='kw'>&lt;-</span> <span class='fl'>100</span>; <span class='no'>p</span> <span class='kw'>&lt;-</span> <span class='fl'>200</span>
+#&gt; </div><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) <span class='no'>n</span> <span class='kw'>&lt;-</span> <span class='fl'>100</span>; <span class='no'>p</span> <span class='kw'>&lt;-</span> <span class='fl'>200</span>
 <span class='no'>y</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='no'>n</span>)
 <span class='no'>X</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='no'>n</span>*<span class='no'>p</span>),<span class='kw'>nrow</span><span class='kw'>=</span><span class='no'>n</span>,<span class='kw'>ncol</span><span class='kw'>=</span><span class='no'>p</span>)
 <span class='no'>loss</span> <span class='kw'>&lt;-</span> <span class='fu'>cv.cornet</span>(<span class='kw'>y</span><span class='kw'>=</span><span class='no'>y</span>,<span class='kw'>cutoff</span><span class='kw'>=</span><span class='fl'>0</span>,<span class='kw'>X</span><span class='kw'>=</span><span class='no'>X</span>)</div><div class='img'><img src='cv.cornet-3.png' alt='' width='700' height='433' /></div><div class='img'><img src='cv.cornet-4.png' alt='' width='700' height='433' /></div><div class='img'><img src='cv.cornet-5.png' alt='' width='700' height='433' /></div><div class='img'><img src='cv.cornet-6.png' alt='' width='700' height='433' /></div><div class='img'><img src='cv.cornet-7.png' alt='' width='700' height='433' /></div><div class='input'><span class='no'>loss</span></div><div class='output co'>#&gt; $deviance
 #&gt; intercept  binomial  combined 
-#&gt;   1.38623   1.39580   1.40782 
+#&gt;   1.38605   1.38605   1.39343 
 #&gt; 
 #&gt; $class
 #&gt; intercept  binomial  combined 
-#&gt;      0.49      0.52      0.49 
+#&gt;      0.48      0.48      0.50 
 #&gt; 
 #&gt; $mse
 #&gt; intercept  binomial  combined 
-#&gt;  0.499969  0.504732  0.510550 
+#&gt;  0.499875  0.499875  0.503556 
 #&gt; 
 #&gt; $mae
 #&gt; intercept  binomial  combined 
-#&gt;   0.99975   1.00417   1.00276 
+#&gt;  0.998999  0.998999  1.001730 
 #&gt; 
 #&gt; $auc
 #&gt; intercept  binomial  combined 
-#&gt;  0.500000  0.459909  0.473182 
+#&gt;       0.5       0.5       0.5 
 #&gt; </div><div class='input'>
 </div></pre>
   </div>
