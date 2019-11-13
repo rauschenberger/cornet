@@ -197,50 +197,50 @@ or <code>"class"</code> (see <code><a href='https://rdrr.io/pkg/glmnet/man/cv.gl
     <p>Computes the cross-validated loss of logistic and combined regression.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>n</span> <span class='kw'>&lt;-</span> <span class='fl'>100</span>; <span class='no'>p</span> <span class='kw'>&lt;-</span> <span class='fl'>20</span>
+    <pre class="examples"><div class='input'><span class='no'>n</span> <span class='kw'>&lt;-</span> <span class='fl'>50</span>; <span class='no'>p</span> <span class='kw'>&lt;-</span> <span class='fl'>20</span>
 <span class='no'>y</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='no'>n</span>)
 <span class='no'>X</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='no'>n</span>*<span class='no'>p</span>),<span class='kw'>nrow</span><span class='kw'>=</span><span class='no'>n</span>,<span class='kw'>ncol</span><span class='kw'>=</span><span class='no'>p</span>)
-<span class='no'>loss</span> <span class='kw'>&lt;-</span> <span class='fu'>cv.cornet</span>(<span class='kw'>y</span><span class='kw'>=</span><span class='no'>y</span>,<span class='kw'>cutoff</span><span class='kw'>=</span><span class='fl'>0</span>,<span class='kw'>X</span><span class='kw'>=</span><span class='no'>X</span>,<span class='kw'>nfolds.ext</span><span class='kw'>=</span><span class='fl'>2</span>)</div><div class='img'><img src='cv.cornet-1.png' alt='' width='700' height='433' /></div><div class='img'><img src='cv.cornet-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='no'>loss</span></div><div class='output co'>#&gt; $deviance
+<span class='no'>loss</span> <span class='kw'>&lt;-</span> <span class='fu'>cv.cornet</span>(<span class='kw'>y</span><span class='kw'>=</span><span class='no'>y</span>,<span class='kw'>cutoff</span><span class='kw'>=</span><span class='fl'>0</span>,<span class='kw'>X</span><span class='kw'>=</span><span class='no'>X</span>,<span class='kw'>nfolds.ext</span><span class='kw'>=</span><span class='fl'>2</span>)</div><div class='output co'>#&gt; <span class='message'>Multiple minima.</span></div><div class='img'><img src='cv.cornet-1.png' alt='' width='700' height='433' /></div><div class='img'><img src='cv.cornet-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='no'>loss</span></div><div class='output co'>#&gt; $deviance
 #&gt; intercept  binomial  combined 
-#&gt;   1.38589   1.38589   1.38651 
+#&gt;   1.38469   1.41454   1.41904 
 #&gt; 
 #&gt; $class
 #&gt; intercept  binomial  combined 
-#&gt;      0.49      0.49      0.50 
+#&gt;      0.48      0.52      0.48 
 #&gt; 
 #&gt; $mse
 #&gt; intercept  binomial  combined 
-#&gt;  0.499800  0.499800  0.500106 
+#&gt;  0.499200  0.511970  0.513667 
 #&gt; 
 #&gt; $mae
 #&gt; intercept  binomial  combined 
-#&gt;  0.999600  0.999600  0.999716 
+#&gt;  0.998400  0.999186  0.996980 
 #&gt; 
 #&gt; $auc
 #&gt; intercept  binomial  combined 
-#&gt;       0.5       0.5       0.5 
+#&gt;  0.500000  0.496795  0.532051 
 #&gt; </div><div class='input'><span class='no'>n</span> <span class='kw'>&lt;-</span> <span class='fl'>100</span>; <span class='no'>p</span> <span class='kw'>&lt;-</span> <span class='fl'>200</span>
 <span class='no'>y</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='no'>n</span>)
 <span class='no'>X</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='no'>n</span>*<span class='no'>p</span>),<span class='kw'>nrow</span><span class='kw'>=</span><span class='no'>n</span>,<span class='kw'>ncol</span><span class='kw'>=</span><span class='no'>p</span>)
 <span class='no'>loss</span> <span class='kw'>&lt;-</span> <span class='fu'>cv.cornet</span>(<span class='kw'>y</span><span class='kw'>=</span><span class='no'>y</span>,<span class='kw'>cutoff</span><span class='kw'>=</span><span class='fl'>0</span>,<span class='kw'>X</span><span class='kw'>=</span><span class='no'>X</span>)</div><div class='img'><img src='cv.cornet-3.png' alt='' width='700' height='433' /></div><div class='img'><img src='cv.cornet-4.png' alt='' width='700' height='433' /></div><div class='img'><img src='cv.cornet-5.png' alt='' width='700' height='433' /></div><div class='img'><img src='cv.cornet-6.png' alt='' width='700' height='433' /></div><div class='img'><img src='cv.cornet-7.png' alt='' width='700' height='433' /></div><div class='input'><span class='no'>loss</span></div><div class='output co'>#&gt; $deviance
 #&gt; intercept  binomial  combined 
-#&gt;   1.38492   1.42239   1.49340 
+#&gt;   1.38623   1.39580   1.40782 
 #&gt; 
 #&gt; $class
 #&gt; intercept  binomial  combined 
-#&gt;      0.48      0.50      0.48 
+#&gt;      0.49      0.52      0.49 
 #&gt; 
 #&gt; $mse
 #&gt; intercept  binomial  combined 
-#&gt;  0.499313  0.516718  0.545435 
+#&gt;  0.499969  0.504732  0.510550 
 #&gt; 
 #&gt; $mae
 #&gt; intercept  binomial  combined 
-#&gt;   0.99850   1.01134   1.01488 
+#&gt;   0.99975   1.00417   1.00276 
 #&gt; 
 #&gt; $auc
 #&gt; intercept  binomial  combined 
-#&gt;  0.500000  0.467545  0.505343 
+#&gt;  0.500000  0.459909  0.473182 
 #&gt; </div><div class='input'>
 </div></pre>
   </div>
