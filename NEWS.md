@@ -1,3 +1,7 @@
+## cornet 0.0.4 (2020-03-17)
+
+* updated documentation
+
 ## cornet 0.0.3 (2019-11-12)
 
 * changed glmnet exports
