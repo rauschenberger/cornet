@@ -13,7 +13,7 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Installation
+## Installation
 
 Install the current release from [CRAN](https://CRAN.R-project.org/package=cornet):
 
@@ -34,11 +34,60 @@ Then load and attach the package:
 library(cornet)
 ```
 
+## Simulation
+
+We simulate data for $n=100$ samples and $p=500$ features. The vector $\boldsymbol{y}$ of length $n$ represents the outcome, and the matrix $\boldsymbol{X}$ with $n$ rows and $p$ columns represents the features. As outlined in the manuscript, it is considered bad statistical practice to dichotomise continuous outcomes, but there might be practical reasons to do so. We recommend to model the original continuous outcome with *linear regression* (default), or the artificial binary outcome with *combined regression* (exception).
+
+```{r,eval=FALSE}
+set.seed(1)
+n <- 100; p <- 500
+X <- matrix(rnorm(n*p),nrow=n,ncol=p)
+beta <- rbinom(n=p,size=1,prob=0.05)
+mean <- X %*% beta
+y <- rnorm(n=n,mean=mean)
+```
+
+## Application
+
+We use the function `cornet` for modelling the underlying continuous outcome and the artifial binary outcome. The argument `cutoff` splits the samples into two groups, those with an outcome less than or equal to the cutoff, and those with an outcome greater than the cutoff.
+
+```{r,eval=FALSE}
+model <- cornet(y=y,cutoff=0,X=X)
+model
+```
+
+The function `coef` returns the estimated coefficients. The first column is for the linear model (beta), and the second column is for the logistic model (gamma). The first row includes the estimated intercepts, and the other rows include the estimated slopes.
+
+```{r,eval=FALSE}
+coef <- coef(model)
+```
+
+The function `predict` returns fitted values for training data, or predicted values for testing data. The argument `newx` specifies the feature matrix. The output is a matrix with one column for each model.
+
+```{r,eval=FALSE}
+predict <- predict(model,newx=X)
+```
+
+The function `cv.cornet` measures the predictive performance of combined regression by nested cross-validation, in comparison with logistic regression.
+
+```{r,eval=FALSE}
+cv.cornet(y=y,cutoff=0,X=X)
+```
+
+Here we observe that combined regression outperforms logistic regression (lower logistic deviance). Logistic regression is only slightly better than the intercept-only model.
+
+# References
+
+Rauschenberger A, and Glaab E (2019). "Predicting artificial binary outcomes from high-dimensional data". *Manuscript in preparation.*
+
+<!--
 # Example
+
+This is a confusing example because we would normally use ordinal regression!
 
 Here we analyse the data from Pinho et al. (2016), available under the Gene Expression Omnibus ([GEO](https://www.ncbi.nlm.nih.gov/geo/)) accession number [GSE80599](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE80599). Our aim is to predict disease progression from gene expression.
 
-The ordinal outcome $\boldsymbol{y}$ (MDS-UPDRS item 3.12, postural instability) ranges from $0$ (normal) to $4$ (severe), but Pinho et al. (2016) model the binary outcome $\boldsymbol{z}=\mathbb{I}(\boldsymbol{y} \geq 1)$, which indicates slow $(0)$ or rapid $(1)$ progression.
+The ordinal outcome $\boldsymbol{y}$ (MDS-UPDRS item 3.12, postural instability) ranges from $0$ (normal) to $4$ (severe), but Pinho et al. (2016) model the binary outcome $\boldsymbol{z}=\mathbb{I}(\boldsymbol{y} \geq 1)$, which indicates slow $(0)$ or rapid $(1)$ progression. 
 
 ## Data
 
@@ -74,45 +123,8 @@ cor <- abs(cor(y,X,method="spearman"))
 X <- X[,cor>0.3] # forbidden!
 ```
 
-<!-- Pearson correlation test is equivalent to $t$-test in simple regression -->
-
-## Model
-
-We use the function `cornet` for modelling the artifial binary outcome. The argument `cutoff` splits the samples into two groups, those with an outcome less than or equal to the cutoff, and those with an outcome greater than the cutoff.
-
-```{r,eval=FALSE}
-model <- cornet(y=y,cutoff=0,X=X)
-model
-```
-
-The function `coef` returns the estimated coefficients. The first column is for the linear model (beta), and the second column is for the logistic model (gamma). The first row includes the estimated intercepts, and the other rows include the estimated slopes.
-
-```{r,eval=FALSE}
-coef <- coef(model)
-```
-
-The function `predict` returns fitted values for training data, or predicted values for testing data. The argument `newx` specifies the feature matrix. The output is a matrix with one column for each model.
-
-```{r,eval=FALSE}
-predict <- predict(model,newx=X)
-```
-
-The function `cv.cornet` measures the predictive performance of combined regression by nested cross-validation, in comparison with logistic regression.
-
-```{r,eval=FALSE}
-cv.cornet(y=y,cutoff=0,X=X)
-```
-
-Here we observe that combined regression outperforms logistic regression (lower logistic deviance). Logistic regression is only slightly better than the intercept-only model.
-
-# References
-
 Pinho R, Guedes LC, Soreq L, Lobo PP, Mestre T, Coelho M, et al. (2016). "Gene Expression Differences in Peripheral Blood of Parkinson’s Disease Patients with Distinct Progression Profiles". *PLoS ONE* 11(6):e0157852. [doi:10.1371/journal.pone.0157852](https://doi.org/10.1371/journal.pone.0157852)
 
-Rauschenberger A, and Glaab E (2019). "Predicting artificial binary outcomes from high-dimensional data". *Manuscript in preparation.*
-
-
-<!--
 # Cognitive impairment
 
 Rani et al. (2017): GSE97644

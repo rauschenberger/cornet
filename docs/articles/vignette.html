@@ -92,9 +92,9 @@
 
     
     
-<div id="installation" class="section level1">
-<h1 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h1>
+<div id="installation" class="section level2">
+<h2 class="hasAnchor">
+<a href="#installation" class="anchor"></a>Installation</h2>
 <p>Install the current release from <a href="https://CRAN.R-project.org/package=cornet">CRAN</a>:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"cornet"</span>)</a></code></pre></div>
 <p>Or install the development version from <a href="https://github.com/rauschenberger/cornet">GitHub</a>:</p>
@@ -103,58 +103,83 @@
 <p>Then load and attach the package:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(cornet)</a></code></pre></div>
 </div>
-<div id="example" class="section level1">
-<h1 class="hasAnchor">
-<a href="#example" class="anchor"></a>Example</h1>
-<p>Here we analyse the data from Pinho et al. (2016), available under the Gene Expression Omnibus (<a href="https://www.ncbi.nlm.nih.gov/geo/">GEO</a>) accession number <a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE80599">GSE80599</a>. Our aim is to predict disease progression from gene expression.</p>
-<p>The ordinal outcome <span class="math inline">\(\boldsymbol{y}\)</span> (MDS-UPDRS item 3.12, postural instability) ranges from <span class="math inline">\(0\)</span> (normal) to <span class="math inline">\(4\)</span> (severe), but Pinho et al. (2016) model the binary outcome <span class="math inline">\(\boldsymbol{z}=\mathbb{I}(\boldsymbol{y} \geq 1)\)</span>, which indicates slow <span class="math inline">\((0)\)</span> or rapid <span class="math inline">\((1)\)</span> progression.</p>
-<div id="data" class="section level2">
+<div id="simulation" class="section level2">
 <h2 class="hasAnchor">
-<a href="#data" class="anchor"></a>Data</h2>
-<p>We use the Bioconductor packages <a href="https://doi.org/10.18129/B9.bioc.GEOquery"><code>GEOquery</code></a> and <a href="https://doi.org/10.18129/B9.bioc.Biobase"><code>Biobase</code></a> for obtaining the data <span class="math inline">\((\approx 150\)</span>MB<span class="math inline">\()\)</span>:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="co">#install.packages("BiocManager")</span></a>
-<a class="sourceLine" id="cb4-2" title="2"><span class="co">#BiocManager::install(c("GEOquery","Biobase"))</span></a>
-<a class="sourceLine" id="cb4-3" title="3">data &lt;-<span class="st"> </span>GEOquery<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/GEOquery/man/getGEO.html">getGEO</a></span>(<span class="dt">GEO=</span><span class="st">"GSE80599"</span>)[[<span class="dv">1</span>]]</a>
-<a class="sourceLine" id="cb4-4" title="4">pheno &lt;-<span class="st"> </span>Biobase<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/Biobase/man/phenoData.html">pData</a></span>(data)</a>
-<a class="sourceLine" id="cb4-5" title="5">y &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span>(pheno<span class="op">$</span><span class="st">`</span><span class="dt">updrs-mds3.12 score:ch1</span><span class="st">`</span>)</a>
-<a class="sourceLine" id="cb4-6" title="6">age &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span>(pheno<span class="op">$</span><span class="st">`</span><span class="dt">age at examination (years):ch1</span><span class="st">`</span>)</a>
-<a class="sourceLine" id="cb4-7" title="7">gender &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span>(pheno<span class="op">$</span><span class="st">`</span><span class="dt">gender:ch1</span><span class="st">`</span><span class="op">==</span><span class="st">"Female"</span>,<span class="dv">1</span>,<span class="dv">0</span>)</a>
-<a class="sourceLine" id="cb4-8" title="8">X &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span>(age,gender,<span class="kw"><a href="https://rdrr.io/r/base/t.html">t</a></span>(Biobase<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/Biobase/man/exprs.html">exprs</a></span>(data)))</a></code></pre></div>
-<p>The vector <span class="math inline">\(\boldsymbol{y}\)</span> of length <span class="math inline">\(n\)</span> represents the outcome, and the matrix <span class="math inline">\(\boldsymbol{X}\)</span> with <span class="math inline">\(n\)</span> rows and <span class="math inline">\(p\)</span> columns represents the features. The first two columns include demographic variables (age, gender), and the other columns include the gene expression data.</p>
+<a href="#simulation" class="anchor"></a>Simulation</h2>
+<p>We simulate data for <span class="math inline">\(n=100\)</span> samples and <span class="math inline">\(p=500\)</span> features. The vector <span class="math inline">\(\boldsymbol{y}\)</span> of length <span class="math inline">\(n\)</span> represents the outcome, and the matrix <span class="math inline">\(\boldsymbol{X}\)</span> with <span class="math inline">\(n\)</span> rows and <span class="math inline">\(p\)</span> columns represents the features. As outlined in the manuscript, it is considered bad statistical practice to dichotomise continuous outcomes, but there might be practical reasons to do so. We recommend to model the original continuous outcome with <em>linear regression</em> (default), or the artificial binary outcome with <em>combined regression</em> (exception).</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb4-2" title="2">n &lt;-<span class="st"> </span><span class="dv">100</span>; p &lt;-<span class="st"> </span><span class="dv">500</span></a>
+<a class="sourceLine" id="cb4-3" title="3">X &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(n<span class="op">*</span>p),<span class="dt">nrow=</span>n,<span class="dt">ncol=</span>p)</a>
+<a class="sourceLine" id="cb4-4" title="4">beta &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/Binomial.html">rbinom</a></span>(<span class="dt">n=</span>p,<span class="dt">size=</span><span class="dv">1</span>,<span class="dt">prob=</span><span class="fl">0.05</span>)</a>
+<a class="sourceLine" id="cb4-5" title="5">mean &lt;-<span class="st"> </span>X <span class="op">%*%</span><span class="st"> </span>beta</a>
+<a class="sourceLine" id="cb4-6" title="6">y &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(<span class="dt">n=</span>n,<span class="dt">mean=</span>mean)</a></code></pre></div>
 </div>
-<div id="filter" class="section level2">
+<div id="application" class="section level2">
 <h2 class="hasAnchor">
-<a href="#filter" class="anchor"></a>Filter</h2>
-<p>We test for marginal association between the ordinal outcome and the features. The smallest adjusted <span class="math inline">\(p\)</span>-values is insignificant, and the <span class="math inline">\(p\)</span>-value distribution is not right-skewed. There is probably not much signal in the data.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">pvalue &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/apply.html">apply</a></span>(X,<span class="dv">2</span>,<span class="cf">function</span>(x) <span class="kw"><a href="https://rdrr.io/r/stats/cor.test.html">cor.test</a></span>(x,y)<span class="op">$</span>p.value)</a>
-<a class="sourceLine" id="cb5-2" title="2"><span class="kw"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/p.adjust.html">p.adjust</a></span>(pvalue))</a>
-<a class="sourceLine" id="cb5-3" title="3"><span class="kw"><a href="https://rdrr.io/r/graphics/hist.html">hist</a></span>(pvalue)</a></code></pre></div>
-<p>We filter the features to artificially increase the signal-to-noise ratio. This filtering leads to <em>bias</em> and <em>overfitting</em>, and must not be done in practical applications!</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">cor &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span>(y,X,<span class="dt">method=</span><span class="st">"spearman"</span>))</a>
-<a class="sourceLine" id="cb6-2" title="2">X &lt;-<span class="st"> </span>X[,cor<span class="op">&gt;</span><span class="fl">0.3</span>] <span class="co"># forbidden!</span></a></code></pre></div>
-<!-- Pearson correlation test is equivalent to $t$-test in simple regression -->
-</div>
-<div id="model" class="section level2">
-<h2 class="hasAnchor">
-<a href="#model" class="anchor"></a>Model</h2>
-<p>We use the function <code>cornet</code> for modelling the artifial binary outcome. The argument <code>cutoff</code> splits the samples into two groups, those with an outcome less than or equal to the cutoff, and those with an outcome greater than the cutoff.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">model &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cornet.html">cornet</a></span>(<span class="dt">y=</span>y,<span class="dt">cutoff=</span><span class="dv">0</span>,<span class="dt">X=</span>X)</a>
-<a class="sourceLine" id="cb7-2" title="2">model</a></code></pre></div>
+<a href="#application" class="anchor"></a>Application</h2>
+<p>We use the function <code>cornet</code> for modelling the underlying continuous outcome and the artifial binary outcome. The argument <code>cutoff</code> splits the samples into two groups, those with an outcome less than or equal to the cutoff, and those with an outcome greater than the cutoff.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">model &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cornet.html">cornet</a></span>(<span class="dt">y=</span>y,<span class="dt">cutoff=</span><span class="dv">0</span>,<span class="dt">X=</span>X)</a>
+<a class="sourceLine" id="cb5-2" title="2">model</a></code></pre></div>
 <p>The function <code>coef</code> returns the estimated coefficients. The first column is for the linear model (beta), and the second column is for the logistic model (gamma). The first row includes the estimated intercepts, and the other rows include the estimated slopes.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1">coef &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span>(model)</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">coef &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span>(model)</a></code></pre></div>
 <p>The function <code>predict</code> returns fitted values for training data, or predicted values for testing data. The argument <code>newx</code> specifies the feature matrix. The output is a matrix with one column for each model.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">predict &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span>(model,<span class="dt">newx=</span>X)</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">predict &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span>(model,<span class="dt">newx=</span>X)</a></code></pre></div>
 <p>The function <code>cv.cornet</code> measures the predictive performance of combined regression by nested cross-validation, in comparison with logistic regression.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1"><span class="kw"><a href="../reference/cv.cornet.html">cv.cornet</a></span>(<span class="dt">y=</span>y,<span class="dt">cutoff=</span><span class="dv">0</span>,<span class="dt">X=</span>X)</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="kw"><a href="../reference/cv.cornet.html">cv.cornet</a></span>(<span class="dt">y=</span>y,<span class="dt">cutoff=</span><span class="dv">0</span>,<span class="dt">X=</span>X)</a></code></pre></div>
 <p>Here we observe that combined regression outperforms logistic regression (lower logistic deviance). Logistic regression is only slightly better than the intercept-only model.</p>
-</div>
 </div>
 <div id="references" class="section level1">
 <h1 class="hasAnchor">
 <a href="#references" class="anchor"></a>References</h1>
-<p>Pinho R, Guedes LC, Soreq L, Lobo PP, Mestre T, Coelho M, et al. (2016). “Gene Expression Differences in Peripheral Blood of Parkinson’s Disease Patients with Distinct Progression Profiles”. <em>PLoS ONE</em> 11(6):e0157852. <a href="https://doi.org/10.1371/journal.pone.0157852">doi:10.1371/journal.pone.0157852</a></p>
 <p>Rauschenberger A, and Glaab E (2019). “Predicting artificial binary outcomes from high-dimensional data”. <em>Manuscript in preparation.</em></p>
 <!--
+# Example
+
+This is a confusing example because we would normally use ordinal regression!
+
+Here we analyse the data from Pinho et al. (2016), available under the Gene Expression Omnibus ([GEO](https://www.ncbi.nlm.nih.gov/geo/)) accession number [GSE80599](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE80599). Our aim is to predict disease progression from gene expression.
+
+The ordinal outcome $\boldsymbol{y}$ (MDS-UPDRS item 3.12, postural instability) ranges from $0$ (normal) to $4$ (severe), but Pinho et al. (2016) model the binary outcome $\boldsymbol{z}=\mathbb{I}(\boldsymbol{y} \geq 1)$, which indicates slow $(0)$ or rapid $(1)$ progression. 
+
+## Data
+
+We use the Bioconductor packages [`GEOquery`](https://doi.org/10.18129/B9.bioc.GEOquery) and [`Biobase`](https://doi.org/10.18129/B9.bioc.Biobase) for obtaining the data $(\approx 150$MB$)$:
+
+
+```r
+#install.packages("BiocManager")
+#BiocManager::install(c("GEOquery","Biobase"))
+data <- GEOquery::getGEO(GEO="GSE80599")[[1]]
+pheno <- Biobase::pData(data)
+y <- as.numeric(pheno$`updrs-mds3.12 score:ch1`)
+age <- as.numeric(pheno$`age at examination (years):ch1`)
+gender <- ifelse(pheno$`gender:ch1`=="Female",1,0)
+X <- cbind(age,gender,t(Biobase::exprs(data)))
+```
+
+The vector $\boldsymbol{y}$ of length $n$ represents the outcome, and the matrix $\boldsymbol{X}$ with $n$ rows and $p$ columns represents the features. The first two columns include demographic variables (age, gender), and the other columns include the gene expression data.
+
+## Filter
+
+We test for marginal association between the ordinal outcome and the features. The smallest adjusted $p$-values is insignificant, and the $p$-value distribution is not right-skewed. There is probably not much signal in the data.
+
+
+```r
+pvalue <- apply(X,2,function(x) cor.test(x,y)$p.value)
+min(p.adjust(pvalue))
+hist(pvalue)
+```
+
+We filter the features to artificially increase the signal-to-noise ratio. This filtering leads to *bias* and *overfitting*, and must not be done in practical applications!
+
+
+```r
+cor <- abs(cor(y,X,method="spearman"))
+X <- X[,cor>0.3] # forbidden!
+```
+
+Pinho R, Guedes LC, Soreq L, Lobo PP, Mestre T, Coelho M, et al. (2016). "Gene Expression Differences in Peripheral Blood of Parkinson’s Disease Patients with Distinct Progression Profiles". *PLoS ONE* 11(6):e0157852. [doi:10.1371/journal.pone.0157852](https://doi.org/10.1371/journal.pone.0157852)
+
 # Cognitive impairment
 
 Rani et al. (2017): GSE97644
@@ -233,13 +258,8 @@ sapply(loss,function(x) x$deviance)
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
 <li><a href="#installation">Installation</a></li>
-      <li>
-<a href="#example">Example</a><ul class="nav nav-pills nav-stacked">
-<li><a href="#data">Data</a></li>
-      <li><a href="#filter">Filter</a></li>
-      <li><a href="#model">Model</a></li>
-      </ul>
-</li>
+      <li><a href="#simulation">Simulation</a></li>
+      <li><a href="#application">Application</a></li>
       <li><a href="#references">References</a></li>
       </ul>
 </div>
