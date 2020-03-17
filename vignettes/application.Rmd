@@ -198,3 +198,103 @@ legend <- sapply(sigma,function(x) as.expression(bquote(sigma == .(x))))
 graphics::legend(x="topleft",legend=legend,lty=lty,bty="n",lwd=lwd)
 grDevices::dev.off()
 ```
+
+
+<!--
+# ordinal regression
+
+It is possible to compare combined regression with ordinal regression by slightly modifying the function cv.cornet. Add the argument "ordinal = TRUE/FALSE" and two code chunks (see below). Such a comparison does not make much sense for ordinal response variables with many categories.
+
+```{r ordinal,eval=FALSE}
+cv.cornet <- function (y, cutoff, X, alpha = 1, nfolds.ext = 5, nfolds.int = 10, foldid.ext = NULL, foldid.int = NULL, type.measure = "deviance", ordinal = FALSE,...) {
+    z <- 1 * (y > cutoff)
+    if (is.null(foldid.ext)) {
+        foldid.ext <- palasso:::.folds(y = z, nfolds = nfolds.ext)
+    } else {
+        nfolds.ext <- length(unique(foldid.ext))
+    }
+    cols <- c("intercept", "binomial", "combined")
+    ### trial start ###
+    if(ordinal){cols <- c(cols,"ordinal")}
+    ### trial end ###
+    pred <- matrix(data = NA, nrow = length(y), ncol = length(cols), 
+        dimnames = list(NULL, cols))
+    for (i in seq_len(nfolds.ext)) {
+        y0 <- y[foldid.ext != i]
+        z0 <- z[foldid.ext != i]
+        X0 <- X[foldid.ext != i, ]
+        X1 <- X[foldid.ext == i, ]
+        if (is.null(foldid.int)) {
+            foldid <- palasso:::.folds(y = z0, nfolds = nfolds.int)
+        } else {
+            foldid <- foldid.int[foldid.ext != i]
+        }
+        fit <- cornet::cornet(y = y0, cutoff = cutoff, X = X0, 
+            alpha = alpha, type.measure = type.measure, foldid = foldid, 
+            ...)
+        tryCatch(expr = plot.cornet(fit), error = function(x) NULL)
+        temp <- predict.cornet(fit, newx = X1)
+        if (any(temp < 0 | temp > 1)) {
+            stop("Outside unit interval.", call. = FALSE)
+        }
+        model <- colnames(temp)
+        for (j in seq_along(model)) {
+            pred[foldid.ext == i, model[j]] <- temp[[model[j]]]
+        }
+        if(ordinal){
+          ### trial start ###
+          #browser()
+          y0_ord <- as.factor(y0)
+          fit <- ordinalNet::ordinalNet(x=X0,y=y0_ord,alpha=alpha)
+          pred_ord <- predict(fit,newx=X1)
+          above <- as.numeric(levels(y0_ord))>cutoff
+          pred[foldid.ext ==i,"ordinal"] <- rowSums(pred_ord[,above])
+        } ### trial end ###
+    }
+    type <- c("deviance", "class", "mse", "mae", "auc")
+    loss <- lapply(X = type, FUN = function(x) palasso:::.loss(y = z, 
+        fit = pred, family = "binomial", type.measure = x, 
+        foldid = foldid.ext)[[1]])
+    names(loss) <- type
+    loss <- lapply(loss, function(x) signif(x, digits = 6))
+    return(loss)
+}
+predict.cornet <- cornet:::predict.cornet
+
+loss <- list()
+for(i in seq_along(Y)){
+  load("data/processed_data.RData",verbose=TRUE)
+  cond <- !is.na(Y[[i]])
+  loss[[i]] <- cv.cornet(y=Y[[i]][cond],X=x[[1]][cond,],cutoff=25.5,ordinal=TRUE)
+}
+sapply(loss,function(x) x$deviance)
+
+
+### Ordinal regression with two different packages.
+#
+# load("data/processed_data.RData",verbose=TRUE)
+# cond <- !is.na(Y$moca.V04)
+# y <- as.factor(x=Y$moca.V04[cond])
+# x <- x[[1]][cond,]
+#
+# # ordinalNet
+# model <- ordinalNet::ordinalNet(x=x,y=y)
+# y_hat <- predict(model)
+# below <- as.numeric(levels(y))<=25.5
+# above <- as.numeric(levels(y))>25.5
+# b1 <- rowSums(y_hat[,below])
+# a1 <- rowSums(y_hat[,above])
+# 
+# # glmnetcr
+# model <- glmnetcr::glmnetcr(x=x,y=y)
+# s <- glmnetcr::select.glmnetcr(model)
+# y_hat <- predict(model)$probs[,,s]
+# below <- as.numeric(colnames(y_hat))<=25.5
+# above <- as.numeric(colnames(y_hat))>25.5
+# b2 <- rowSums(y_hat[,below])
+# a2 <- rowSums(y_hat[,above])
+# 
+# cor(a1,a2)
+# cor(b1,b2)
+```
+-->

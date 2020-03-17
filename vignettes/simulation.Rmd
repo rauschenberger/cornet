@@ -58,10 +58,10 @@ fuse0 <- fuse1 <- list()
 for(i in c("deviance","class","mse","mae","auc")){
   fuse0[[i]] <- sapply(ridge,function(x) (x[[i]]["combined"]-x[[i]]["binomial"]))
   fuse1[[i]] <- sapply(lasso,function(x) (x[[i]]["combined"]-x[[i]]["binomial"]))
-  if(i=="auc"){fuse0[[i]] <- -fuse0[[i]]; fuse1[[i]] <- -fuse1[[i]]}
+  #if(i=="auc"){fuse0[[i]] <- -fuse0[[i]]; fuse1[[i]] <- -fuse1[[i]]}
 }
 
-grDevices::pdf("manuscript/figure_BOX.pdf",width=6,height=3)
+grDevices::pdf("manuscript/figure_BOX.pdf",width=6,height=4)
 graphics::par(mar=c(1.9,1.9,0.1,0.1))
 graphics::plot.new()
 ylim <- range(unlist(fuse0),unlist(fuse1))
