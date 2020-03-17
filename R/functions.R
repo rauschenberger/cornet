@@ -379,11 +379,12 @@ plot.cornet <- function(x,...){
   
   # colours
   if("RColorBrewer" %in% .packages(all.available=TRUE)){
-    pal <- rev(c("white",RColorBrewer::brewer.pal(n=9,name="Blues")))
+    pal <- rev(c("white",RColorBrewer::brewer.pal(n=9,name="Greys")))
     col <- grDevices::colorRampPalette(colors=pal)(k)
   } else {
     col <- grDevices::heat.colors(n=k)
   }
+  #col <- grDevices::grey(level=seq(from=0,to=1,length.out=k))
   
   nsigma <- length(x$sigma)
   npi <- length(x$pi)
