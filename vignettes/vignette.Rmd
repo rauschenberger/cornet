@@ -40,7 +40,7 @@ library(cornet)
 
 ## Example
 
-We simulate data for $n$ samples and $p$ features, in a high-dimensional settting ($p \gg n$). The matrix $\boldsymbol{X}$ with $n$ rows and $p$ columns represents the features, and the vector $\boldsymbol{y}$ of length $n$ represents the continuous outcome.
+We simulate data for $n$ samples and $p$ features, in a high-dimensional setting ($p \gg n$). The matrix $\boldsymbol{X}$ with $n$ rows and $p$ columns represents the features, and the vector $\boldsymbol{y}$ of length $n$ represents the continuous outcome.
 
 ```{r,eval=FALSE}
 set.seed(1)
@@ -50,7 +50,7 @@ beta <- rbinom(n=p,size=1,prob=0.05)
 y <- rnorm(n=n,mean=X%*%beta)
 ```
 
-We use the function `cornet` for modelling the original continuous outcome and the artifial binary outcome. The argument `cutoff` splits the samples into two groups, those with an outcome less than or equal to the cutoff, and those with an outcome greater than the cutoff.
+We use the function `cornet` for modelling the original continuous outcome and the artificial binary outcome. The argument `cutoff` splits the samples into two groups, those with an outcome less than or equal to the cutoff, and those with an outcome greater than the cutoff.
 
 ```{r,eval=FALSE}
 model <- cornet(y=y,cutoff=0,X=X)
