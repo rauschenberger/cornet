@@ -1,4 +1,4 @@
-## cornet 0.0.4 (2020-03-17)
+## cornet 0.0.4 (2020-03-18)
 
 * updated documentation
 
