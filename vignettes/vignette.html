@@ -304,6 +304,10 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 
 
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>It is considered bad statistical practice to dichotomise continuous outcomes, but some applications require predicted probabilities rather than predicted values. To obtain predicted values, we recommend to model the original continuous outcome with <em>linear regression</em>. To obtain predicted probabilities, we recommend not to model the artificial binary outcome with <em>logistic regression</em>, but to model the original continuous outcome and the artificial binary outcome with <em>combined regression</em>.</p>
+</div>
 <div id="installation" class="section level2">
 <h2>Installation</h2>
 <p>Install the current release from <a href="https://CRAN.R-project.org/package=cornet">CRAN</a>:</p>
@@ -314,19 +318,15 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <p>Then load and attach the package:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">library</span>(cornet)</a></code></pre></div>
 </div>
-<div id="simulation" class="section level2">
-<h2>Simulation</h2>
-<p>We simulate data for <span class="math inline">\(n=100\)</span> samples and <span class="math inline">\(p=500\)</span> features. The vector <span class="math inline">\(\boldsymbol{y}\)</span> of length <span class="math inline">\(n\)</span> represents the outcome, and the matrix <span class="math inline">\(\boldsymbol{X}\)</span> with <span class="math inline">\(n\)</span> rows and <span class="math inline">\(p\)</span> columns represents the features. As outlined in the manuscript, it is considered bad statistical practice to dichotomise continuous outcomes, but there might be practical reasons to do so. We recommend to model the original continuous outcome with <em>linear regression</em> (default), or the artificial binary outcome with <em>combined regression</em> (exception).</p>
+<div id="example" class="section level2">
+<h2>Example</h2>
+<p>We simulate data for <span class="math inline">\(n\)</span> samples and <span class="math inline">\(p\)</span> features, in a high-dimensional settting (<span class="math inline">\(p \gg n\)</span>). The matrix <span class="math inline">\(\boldsymbol{X}\)</span> with <span class="math inline">\(n\)</span> rows and <span class="math inline">\(p\)</span> columns represents the features, and the vector <span class="math inline">\(\boldsymbol{y}\)</span> of length <span class="math inline">\(n\)</span> represents the continuous outcome.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="kw">set.seed</span>(<span class="dv">1</span>)</a>
 <a class="sourceLine" id="cb4-2" title="2">n &lt;-<span class="st"> </span><span class="dv">100</span>; p &lt;-<span class="st"> </span><span class="dv">500</span></a>
 <a class="sourceLine" id="cb4-3" title="3">X &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rnorm</span>(n<span class="op">*</span>p),<span class="dt">nrow=</span>n,<span class="dt">ncol=</span>p)</a>
 <a class="sourceLine" id="cb4-4" title="4">beta &lt;-<span class="st"> </span><span class="kw">rbinom</span>(<span class="dt">n=</span>p,<span class="dt">size=</span><span class="dv">1</span>,<span class="dt">prob=</span><span class="fl">0.05</span>)</a>
-<a class="sourceLine" id="cb4-5" title="5">mean &lt;-<span class="st"> </span>X <span class="op">%*%</span><span class="st"> </span>beta</a>
-<a class="sourceLine" id="cb4-6" title="6">y &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dt">n=</span>n,<span class="dt">mean=</span>mean)</a></code></pre></div>
-</div>
-<div id="application" class="section level2">
-<h2>Application</h2>
-<p>We use the function <code>cornet</code> for modelling the underlying continuous outcome and the artifial binary outcome. The argument <code>cutoff</code> splits the samples into two groups, those with an outcome less than or equal to the cutoff, and those with an outcome greater than the cutoff.</p>
+<a class="sourceLine" id="cb4-5" title="5">y &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dt">n=</span>n,<span class="dt">mean=</span>X<span class="op">%*%</span>beta)</a></code></pre></div>
+<p>We use the function <code>cornet</code> for modelling the original continuous outcome and the artifial binary outcome. The argument <code>cutoff</code> splits the samples into two groups, those with an outcome less than or equal to the cutoff, and those with an outcome greater than the cutoff.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">model &lt;-<span class="st"> </span><span class="kw">cornet</span>(<span class="dt">y=</span>y,<span class="dt">cutoff=</span><span class="dv">0</span>,<span class="dt">X=</span>X)</a>
 <a class="sourceLine" id="cb5-2" title="2">model</a></code></pre></div>
 <p>The function <code>coef</code> returns the estimated coefficients. The first column is for the linear model (beta), and the second column is for the logistic model (gamma). The first row includes the estimated intercepts, and the other rows include the estimated slopes.</p>
@@ -335,11 +335,11 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">predict &lt;-<span class="st"> </span><span class="kw">predict</span>(model,<span class="dt">newx=</span>X)</a></code></pre></div>
 <p>The function <code>cv.cornet</code> measures the predictive performance of combined regression by nested cross-validation, in comparison with logistic regression.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="kw">cv.cornet</span>(<span class="dt">y=</span>y,<span class="dt">cutoff=</span><span class="dv">0</span>,<span class="dt">X=</span>X)</a></code></pre></div>
-<p>Here we observe that combined regression outperforms logistic regression (lower logistic deviance). Logistic regression is only slightly better than the intercept-only model.</p>
+<p>Here we observe that combined regression outperforms logistic regression (lower logistic deviance), and that logistic regression is only slightly better than the intercept-only model.</p>
 </div>
 <div id="references" class="section level1">
 <h1>References</h1>
-<p>Rauschenberger A, and Glaab E (2019). “Predicting artificial binary outcomes from high-dimensional data”. <em>Manuscript in preparation.</em></p>
+<p>Rauschenberger A, and Glaab E (2020). “Predicting artificial binary outcomes from high-dimensional data”. <em>Manuscript in preparation.</em></p>
 <!--
 # Example
 

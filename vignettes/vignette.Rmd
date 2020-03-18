@@ -13,6 +13,10 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+## Introduction
+
+It is considered bad statistical practice to dichotomise continuous outcomes, but some applications require predicted probabilities rather than predicted values. To obtain predicted values, we recommend to model the original continuous outcome with *linear regression*. To obtain predicted probabilities, we recommend not to model the artificial binary outcome with *logistic regression*, but to model the original continuous outcome and the artificial binary outcome with *combined regression*.
+
 ## Installation
 
 Install the current release from [CRAN](https://CRAN.R-project.org/package=cornet):
@@ -34,22 +38,19 @@ Then load and attach the package:
 library(cornet)
 ```
 
-## Simulation
+## Example
 
-We simulate data for $n=100$ samples and $p=500$ features. The vector $\boldsymbol{y}$ of length $n$ represents the outcome, and the matrix $\boldsymbol{X}$ with $n$ rows and $p$ columns represents the features. As outlined in the manuscript, it is considered bad statistical practice to dichotomise continuous outcomes, but there might be practical reasons to do so. We recommend to model the original continuous outcome with *linear regression* (default), or the artificial binary outcome with *combined regression* (exception).
+We simulate data for $n$ samples and $p$ features, in a high-dimensional settting ($p \gg n$). The matrix $\boldsymbol{X}$ with $n$ rows and $p$ columns represents the features, and the vector $\boldsymbol{y}$ of length $n$ represents the continuous outcome.
 
 ```{r,eval=FALSE}
 set.seed(1)
 n <- 100; p <- 500
 X <- matrix(rnorm(n*p),nrow=n,ncol=p)
 beta <- rbinom(n=p,size=1,prob=0.05)
-mean <- X %*% beta
-y <- rnorm(n=n,mean=mean)
+y <- rnorm(n=n,mean=X%*%beta)
 ```
 
-## Application
-
-We use the function `cornet` for modelling the underlying continuous outcome and the artifial binary outcome. The argument `cutoff` splits the samples into two groups, those with an outcome less than or equal to the cutoff, and those with an outcome greater than the cutoff.
+We use the function `cornet` for modelling the original continuous outcome and the artifial binary outcome. The argument `cutoff` splits the samples into two groups, those with an outcome less than or equal to the cutoff, and those with an outcome greater than the cutoff.
 
 ```{r,eval=FALSE}
 model <- cornet(y=y,cutoff=0,X=X)
@@ -74,11 +75,11 @@ The function `cv.cornet` measures the predictive performance of combined regress
 cv.cornet(y=y,cutoff=0,X=X)
 ```
 
-Here we observe that combined regression outperforms logistic regression (lower logistic deviance). Logistic regression is only slightly better than the intercept-only model.
+Here we observe that combined regression outperforms logistic regression (lower logistic deviance), and that logistic regression is only slightly better than the intercept-only model.
 
 # References
 
-Rauschenberger A, and Glaab E (2019). "Predicting artificial binary outcomes from high-dimensional data". *Manuscript in preparation.*
+Rauschenberger A, and Glaab E (2020). "Predicting artificial binary outcomes from high-dimensional data". *Manuscript in preparation.*
 
 <!--
 # Example

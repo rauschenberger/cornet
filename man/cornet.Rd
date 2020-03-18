@@ -91,8 +91,8 @@ net
 
 }
 \references{
-Armin Rauschenberger and Enrico Glaab (2019).
-"Lasso and ridge regression for dichotomised outcomes".
+Armin Rauschenberger and Enrico Glaab (2020).
+"Predicting artificial binary outcomes from high-dimensional data".
 \emph{Manuscript in preparation}.
 }
 \seealso{
