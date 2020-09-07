@@ -4,8 +4,17 @@
 \alias{.check}
 \title{Arguments}
 \usage{
-.check(x, type, dim = NULL, miss = FALSE, min = NULL, max = NULL,
-  values = NULL, inf = FALSE, null = FALSE)
+.check(
+  x,
+  type,
+  dim = NULL,
+  miss = FALSE,
+  min = NULL,
+  max = NULL,
+  values = NULL,
+  inf = FALSE,
+  null = FALSE
+)
 }
 \arguments{
 \item{x}{argument}

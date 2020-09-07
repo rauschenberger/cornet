@@ -9,11 +9,11 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
 ---
 
-This script requires that the working directory includes the folders "data", "results", and "manuscript". We obtained our results using R 3.6.1 (2019-07-05) with cornet 0.0.3 (2019-10-02) on a local machine (x86_64-w64-mingw32/x64, Windows 10 x64), and verified them on a virtual machine (x86_64-pc-linux-gnu, Ubuntu 16.04.6). Floating point errors might lead to slightly different results on other platforms.
+This script requires that the working directory includes the folders "data", "results", and "manuscript". We obtained our results using R 4.0.0 (2020-04-24) with cornet 0.0.4 (2020-03-18) on a local machine (x86_64-w64-mingw32/x64, Windows 10 x64). Floating point errors might lead to slightly different results on other platforms.
 
 ```{r setup,include=FALSE}
 knitr::opts_chunk$set(echo=TRUE,eval=FALSE)
-#setwd("C:/Users/armin.rauschenberger/Desktop/cornet") # local drive
+setwd("C:/Users/armin.rauschenberger/Desktop/cornet") # local drive
 #setwd("Z:/Rauschenberger/cornet/BIOINF_20XX-XX-XX") # shared drive
 #devtools::install_github("rauschenberger/cornet")
 ```
@@ -71,19 +71,25 @@ graphics::axis(side=2)
 graphics::abline(h=0,col="grey",lty=2)
 graphics::abline(v=at+1,col="grey",lty=2)
 graphics::box()
-graphics::boxplot(fuse1,at=at-0.5,add=TRUE,axes=FALSE,border="black")
-graphics::boxplot(fuse0,at=at+0.5,add=TRUE,axes=FALSE,border="darkgrey")
+graphics::boxplot(fuse1,at=at-0.5,add=TRUE,axes=FALSE,col="white",border="black")
+graphics::boxplot(fuse0,at=at+0.5,add=TRUE,axes=FALSE,col="white",border="darkgrey")
 labels <- names(fuse1)
 labels <- ifelse(labels=="class","mcr",labels)
 labels <- ifelse(labels %in% c("mcr","mse","mae","auc"),toupper(labels),labels)
 graphics::axis(side=1,at=at,labels=labels)
 grDevices::dev.off()
 
+# decrease
 sapply(fuse1,function(x) mean(x<0)) # lasso
 sapply(fuse0,function(x) mean(x<0)) # ridge
 
+# constant
 sapply(fuse1,function(x) mean(x==0)) # lasso
 sapply(fuse0,function(x) mean(x==0)) # ridge
+
+# increase
+sapply(fuse1,function(x) mean(x>0)) # lasso
+sapply(fuse0,function(x) mean(x>0)) # ridge
 ```
 
 ```{r figure_TAB}

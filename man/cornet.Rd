@@ -5,9 +5,20 @@
 \alias{cornet-package}
 \title{Combined regression}
 \usage{
-cornet(y, cutoff, X, alpha = 1, npi = 101, pi = NULL, nsigma = 99,
-  sigma = NULL, nfolds = 10, foldid = NULL,
-  type.measure = "deviance", ...)
+cornet(
+  y,
+  cutoff,
+  X,
+  alpha = 1,
+  npi = 101,
+  pi = NULL,
+  nsigma = 99,
+  sigma = NULL,
+  nfolds = 10,
+  foldid = NULL,
+  type.measure = "deviance",
+  ...
+)
 }
 \arguments{
 \item{y}{continuous outcome\strong{:}

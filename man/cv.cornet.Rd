@@ -4,9 +4,18 @@
 \alias{cv.cornet}
 \title{Performance measurement}
 \usage{
-cv.cornet(y, cutoff, X, alpha = 1, nfolds.ext = 5, nfolds.int = 10,
-  foldid.ext = NULL, foldid.int = NULL, type.measure = "deviance",
-  ...)
+cv.cornet(
+  y,
+  cutoff,
+  X,
+  alpha = 1,
+  nfolds.ext = 5,
+  nfolds.int = 10,
+  foldid.ext = NULL,
+  foldid.int = NULL,
+  type.measure = "deviance",
+  ...
+)
 }
 \arguments{
 \item{y}{continuous outcome\strong{:}
