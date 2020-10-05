@@ -626,13 +626,13 @@ predict.cornet <- function(object,newx,type="probability",...){
   if(!miss && any(is.na(x))){
     stop(paste0("Argument \"",name,"\" contains missing values."),call.=FALSE)
   }
-  if(!is.null(min) && any(x<min)){
+  if(!is.null(min) && any(x<min,na.rm=TRUE)){
     stop(paste0("expecting ",name," >= ",min),call.=FALSE)
   }
-  if(!is.null(max) && any(x>max)){
+  if(!is.null(max) && any(x>max,na.rm=TRUE)){
     stop(paste0("expecting ",name," <= ",max),call.=FALSE)
   }
-  if(!is.null(values) && any(!x %in% values)){
+  if(!is.null(values) && any(!x %in% values,na.rm=TRUE)){
     stop(paste0("Argument \"",name,"\" contains invalid values."),call.=FALSE)
   }
   if(!inf && any(is.infinite(values))){
