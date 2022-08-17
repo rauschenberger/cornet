@@ -79,7 +79,7 @@ Here we observe that combined regression outperforms logistic regression (lower 
 
 # References
 
-Rauschenberger A, and Glaab E (2021). "Predicting artificial binary outcomes from high-dimensional data". *Manuscript in preparation.*
+Rauschenberger A, and Glaab E (2022). "Predicting artificial binary outcomes from high-dimensional data". *Manuscript in preparation.*
 
 <!--
 # Example

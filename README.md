@@ -32,7 +32,7 @@ devtools::install_github("rauschenberger/cornet")
 
 ## Reference
 
-Armin Rauschenberger and Enrico Glaab (2020). “Predicting artificial
+Armin Rauschenberger and Enrico Glaab (2022). “Predicting artificial
 binary outcomes from high-dimensional data”. *Manuscript in
 preparation.*
 

@@ -1,10 +1,10 @@
-pandoc: 2.7.2
-pkgdown: 1.5.1
+pandoc: '2.18'
+pkgdown: 2.0.6
 pkgdown_sha: ~
 articles:
   application: application.html
   article: article.html
   simulation: simulation.html
   vignette: vignette.html
-last_built: 2021-04-19T07:49Z
+last_built: 2022-08-17T11:42Z
 
