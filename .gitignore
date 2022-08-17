@@ -4,3 +4,4 @@ docs/pkgdown.yml
 *.png
 !orcid_16x16.png
 CRAN-RELEASE
+.git
