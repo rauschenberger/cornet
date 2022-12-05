@@ -13,8 +13,8 @@ This script requires that the working directory includes the folders "data", "re
 
 ```{r setup,include=FALSE}
 knitr::opts_chunk$set(echo=TRUE,eval=FALSE)
-#setwd("C:/Users/armin.rauschenberger/Desktop/cornet") # local drive
-#setwd("Z:/Rauschenberger/cornet") # shared drive
+setwd("C:/Users/armin.rauschenberger/Desktop/cornet") # local drive
+#setwd("Z:/Rauschenberger/cornet/BIOINF_20XX-XX-XX") # shared drive
 #devtools::install_github("rauschenberger/cornet")
 ```
 

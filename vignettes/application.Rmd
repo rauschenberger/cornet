@@ -13,8 +13,8 @@ This script requires that the working directory includes the folders "data", "re
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo=TRUE,eval=FALSE)
-#setwd("C:/Users/armin.rauschenberger/Desktop/cornet") # local drive
-#setwd("Z:/Rauschenberger/cornet") # shared drive
+setwd("C:/Users/armin.rauschenberger/Desktop/cornet") # local drive
+#setwd("Z:/Rauschenberger/cornet/BIOINF_20XX-XX-XX") # shared drive
 #utils::install.packages(pkgs=c("devtools","missRanger","xtable"))
 #devtools::install_github("rauschenberger/cornet")
 ```
@@ -50,7 +50,8 @@ writeLines(text=capture.output(utils::sessionInfo(),cat("\n"),
 rm(list=ls())
 info <- read.csv("data/PPMI_Data_Dictionary_for_Baseline_Dataset_Jul2018.csv",nrows=238)
 info <- info[!info$Variable %in% c("","PATNO","SITE","APPRDX","EVENT_ID","symptom5_comment"),]
-info <- paste(paste0("\\textit{",info$Variable,"}: ",info$Description),collapse="; ")
+#info <- paste(paste0("\\textit{",info$Variable,"}: ",info$Description),collapse="; ")
+info <- paste(paste0("\\item \\textit{",info$Variable,"}: ",info$Description),collapse=" ")
 info <- gsub(pattern=" \\(OFF\\)",replacement="",x=info)
 info <- gsub(pattern="_",replacement="\\_",x=info,fixed=TRUE)
 info <- gsub(pattern="&",replacement="\\\\&",x=info)
@@ -115,8 +116,8 @@ for(i in names){
 
   # significance based on multi-split
   pvalue <- sapply(pval,function(x) x[[i]])
-  frame[i,"pval.min"] <- signif(min(pvalue),digits=2)
-  frame[i,"pval.max"] <- signif(max(pvalue),digits=2)
+  frame[i,"pval.min"] <- round(min(pvalue),digits=3) # signif digits=2
+  frame[i,"pval.max"] <- round(max(pvalue),digits=3)
   #frame[i,"pval.prop"] <- round(mean(pvalue<0.05),digits=2)
 
   # quantiles weight parameter
@@ -133,7 +134,7 @@ for(i in names){
 }
 
 # presentation
-
+frame <- format(frame) # new
 rownames(frame) <- paste0(substr(x=rownames(frame),start=1,stop=5)," ",
                           substr(x=rownames(frame),start=6,stop=6))
 colnames(frame) <- gsub(pattern="dev.",replacement="\\\\delta_{\\\\text{",x=colnames(frame))
@@ -142,10 +143,42 @@ colnames(frame) <- gsub(pattern="pi.",replacement="\\\\pi_{\\\\text{",x=colnames
 colnames(frame) <- gsub(pattern="sd.",replacement="\\\\sigma_{\\\\text{",x=colnames(frame))
 colnames(frame) <- paste0("$",colnames(frame),"}}$")
 
-digits <- 2+c(0,1*grepl(pattern="delta_|p_",x=colnames(frame))) # was "p_"
-xtable <- xtable::xtable(frame,digits=digits)
+#digits <- 2+c(0,1*grepl(pattern="delta_|p_",x=colnames(frame))) # old
+xtable <- xtable::xtable(frame) #,digits=digits) # old
 xtable::print.xtable(xtable,include.rownames=TRUE,sanitize.text.function=function(x) x)
 ```
+
+
+```{r trial}
+load("results/application.RData",verbose=TRUE)
+
+names <- c(paste0("lasso",1:3),paste0("ridge",1:3))
+type <- c("deviance","class","mse","mae","auc")  
+frame <- matrix(NA,nrow=length(names),ncol=length(type),dimnames=list(names,type))
+
+for(i in names){
+  for(j in type){
+    # loss
+    value <- as.data.frame(t(sapply(loss,function(x) x[[i]][[j]])))
+    change <- 100*(value$combined-value$binomial)/value$binomial
+    frame[i,j] <- median(change)
+  }
+}
+
+#median <- format(round(median,digits=2),trim=TRUE)
+#min <- format(round(min,digits=2),trim=TRUE)
+#max <- format(round(max,digits=2),trim=TRUE)
+#frame[,] <- paste0(median," [",min,",",max,"]")
+
+frame <- format(round(frame,digits=1))
+colnames(frame) <- sapply(colnames(frame),function(x) switch(x,class="\\textsc{mcr}",mse="\\textsc{mse}",mae="\\textsc{mae}",auc="\\textsc{auc}",x))
+rownames(frame) <- paste0(substr(x=rownames(frame),start=1,stop=5)," ",
+                          substr(x=rownames(frame),start=6,stop=6))
+xtable <- xtable::xtable(frame,align="r|ccccc")
+xtable::print.xtable(xtable,include.rownames=TRUE,sanitize.text.function=function(x) x)
+
+```
+
 
 # Figures
 
