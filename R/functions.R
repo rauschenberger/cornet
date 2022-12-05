@@ -110,7 +110,7 @@
 cornet <- function(y,cutoff,X,alpha=1,npi=101,pi=NULL,nsigma=99,sigma=NULL,nfolds=10,foldid=NULL,type.measure="deviance",...){
   
   #--- temporary ---
-  # cutoff <- 0; npi <- 101; pi <- NULL; nsigma <- 99; sigma <- NULL; nfolds <- 10;  foldid <- NULL; type.measure <- "deviance"; logistic <- TRUE
+  # alpha <- 1; cutoff <- 0; npi <- 101; pi <- NULL; nsigma <- 99; sigma <- NULL; nfolds <- 10;  foldid <- NULL; type.measure <- "deviance"; logistic <- TRUE
   test <- list()
   test$combined <- TRUE
   
@@ -242,6 +242,7 @@ cornet <- function(y,cutoff,X,alpha=1,npi=101,pi=NULL,nsigma=99,sigma=NULL,nfold
   #--- return ---
   fit$cutoff <- cutoff
   fit$info <- list(type.measure=type.measure,
+                   sd.min=fit$sigma[which.min(fit$cvm[,fit$pi==1])], # continuous only
                    sd.y=stats::sd(y),
                    "+"=sum(z==1),
                    "-"=sum(z==0),
@@ -475,7 +476,7 @@ predict.cornet <- function(object,newx,type="probability",...){
   # linear and logistic
   link <- as.numeric(stats::predict(object=x$gaussian,
                   newx=newx,s=x$gaussian$lambda.min,type="response"))
-  #prob$gaussian <- stats::pnorm(q=link,mean=x$cutoff,sd=x$info$sd.y) # was active
+  prob$gaussian <- stats::pnorm(q=link,mean=x$cutoff,sd=x$info$sd.min) # continuous only
   prob$binomial <- as.numeric(stats::predict(object=x$binomial,
                   newx=newx,s=x$binomial$lambda.min,type="response"))
   
@@ -699,7 +700,7 @@ cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=N
   
   #--- cross-validated loss ---
   
-  cols <- c("intercept","binomial","combined") # was with "gaussian" and without "intercept"
+  cols <- c("intercept","binomial","gaussian","combined")
   pred <- matrix(data=NA,nrow=length(y),ncol=length(cols),
                  dimnames=list(NULL,cols))
   
