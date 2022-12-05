@@ -9,7 +9,7 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
 ---
 
-This script requires that the working directory includes the folders "data", "results", and "manuscript", with the files "PPMI_Baseline_Data_02Jul2018.csv", "PPMI_Year_1-3_Data_02Jul2018.csv" and "PPMI_Data_Dictionary_for_Baseline_Dataset_Jul2018.csv" in the folder "data". We obtained our results using R 4.2.2 (2022-10-31) with cornet 0.0.4 (2020-03-08) on a local machine (aarch64-apple-darwin20, macOS Monterey 12.6).
+This script requires that the working directory includes the folders "data", "results", and "manuscript", with the files "PPMI_Baseline_Data_02Jul2018.csv", "PPMI_Year_1-3_Data_02Jul2018.csv" and "PPMI_Data_Dictionary_for_Baseline_Dataset_Jul2018.csv" in the folder "data". We obtained our results using R 4.2.2 (2022-10-31) with cornet 0.0.7 (2022-XX-XX) on a local machine (aarch64-apple-darwin20, macOS Monterey 12.6).
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo=TRUE,eval=FALSE)
