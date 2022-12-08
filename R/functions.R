@@ -113,6 +113,7 @@ cornet <- function(y,cutoff,X,alpha=1,npi=101,pi=NULL,nsigma=99,sigma=NULL,nfold
   # alpha <- 1; cutoff <- 0; npi <- 101; pi <- NULL; nsigma <- 99; sigma <- NULL; nfolds <- 10;  foldid <- NULL; type.measure <- "deviance"; logistic <- TRUE
   test <- list()
   test$combined <- TRUE
+  test$switch <- TRUE
   
   #--- checks ---
   n <- length(y)
@@ -237,6 +238,16 @@ cornet <- function(y,cutoff,X,alpha=1,npi=101,pi=NULL,nsigma=99,sigma=NULL,nfold
     fit$sigma.min <- fit$sigma[temp[1]]
     fit$pi.min <- fit$pi[temp[2]]
     if(fit$cvm[names(fit$sigma.min),names(fit$pi.min)]!=min(fit$cvm)){stop("Internal error.")}
+  }
+  
+  if(test$switch){
+    fit$inf <- fit$cvm
+    fit$inf[,!fit$pi %in% c(0,1)] <- Inf
+    temp <- which(fit$inf==min(fit$inf),arr.ind=TRUE,useNames=TRUE)
+    if(nrow(temp)>1){message("Multiple minima.");temp <- temp[1,,drop=FALSE]}
+    fit$inf.sigma.min <- fit$sigma[temp[1]]
+    fit$inf.pi.min <- fit$pi[temp[2]]
+    if(fit$inf[names(fit$inf.sigma.min),names(fit$inf.pi.min)]!=min(fit$inf)){stop("Internal error.")}
   }
   
   #--- return ---
@@ -486,6 +497,11 @@ predict.cornet <- function(object,newx,type="probability",...){
     prob$combined <- x$pi.min*cont + (1-x$pi.min)*prob$binomial
   }
   
+  if(test$switch){
+    cont <- stats::pnorm(q=link,mean=x$cutoff,sd=x$inf.sigma.min)
+    prob$switch <- x$inf.pi.min*cont + (1-x$inf.pi.min)*prob$binomial
+  }
+  
   # consistency tests
   lapply(X=prob,FUN=function(p) .check(x=p,type="vector",min=0,max=1))
   .equal(link>x$cutoff,prob$gaussian>0.5)
@@ -700,7 +716,7 @@ cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=N
   
   #--- cross-validated loss ---
   
-  cols <- c("intercept","binomial","gaussian","combined")
+  cols <- c("intercept","binomial","gaussian","combined","switch")
   pred <- matrix(data=NA,nrow=length(y),ncol=length(cols),
                  dimnames=list(NULL,cols))
   
@@ -717,7 +733,7 @@ cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=N
       foldid <- foldid.int[foldid.ext!=i]
     }
     
-    fit <- cornet::cornet(y=y0,cutoff=cutoff,X=X0,alpha=alpha,type.measure=type.measure,foldid=foldid,...)
+    fit <- cornet(y=y0,cutoff=cutoff,X=X0,alpha=alpha,type.measure=type.measure,foldid=foldid,...)
     tryCatch(expr=plot.cornet(fit),error=function(x) NULL)
     temp <- predict.cornet(fit,newx=X1)
     if(any(temp<0|temp>1)){stop("Outside unit interval.",call.=FALSE)}
@@ -790,7 +806,7 @@ cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=N
   fold <- palasso:::.folds(y=z,nfolds=5)
   fold <- ifelse(fold==1,1,0)
   
-  fit <- cornet::cornet(y=y[fold==0],cutoff=cutoff,X=X[fold==0,],
+  fit <- cornet(y=y[fold==0],cutoff=cutoff,X=X[fold==0,],
                         alpha=alpha,type.measure=type.measure)
   tryCatch(expr=plot.cornet(fit),error=function(x) NULL)
   pred <- predict.cornet(fit,newx=X[fold==1,])
