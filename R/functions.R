@@ -901,7 +901,7 @@ cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=N
                   FUN.VALUE = numeric(n))
   }
   
-  beta <- stats::rbinom(n = p,size = 1, prob = prob)
+  beta <- stats::runif(n=p)*stats::rbinom(n = p,size = 1, prob = prob)
   mean <- X %*% beta
   y <- stats::rnorm(n = n, mean = mean, sd = sd)
   y <- sign(y) * abs(y)^exp # departure from normality
