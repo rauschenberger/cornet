@@ -166,6 +166,7 @@ for(i in names){
     # loss
     value <- as.data.frame(t(sapply(loss,function(x) x[[i]][[j]])))
     change <- 100*(value$combined-value$binomial)/value$binomial
+    #change <- 100*(value$combined-value$gaussian)/value$gaussian
     frame[i,j] <- median(change)
   }
 }
