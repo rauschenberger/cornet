@@ -902,7 +902,15 @@ cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=N
   }
   
   beta <- stats::runif(n=p)*stats::rbinom(n = p,size = 1, prob = prob)
-  mean <- X %*% beta
+  if(TRUE){ # non-linear effects
+    warning("temporary: non-linear effects")
+    lambda <- sample(x=c(0,0.5,1,2),replace=TRUE,prob=c(0.25,0.25,0.25,0.25),size=p)
+    tau <- sample(x=c(-2,-1,0,1,2),replace=TRUE,prob=c(0.2,0.2,0.2,0.2,0.2),size=p)
+    Z <- sign(X-tau)*abs(X-tau)^rep(lambda,each=n)
+  } else {
+    Z <- X
+  }
+  mean <- Z %*% beta
   y <- stats::rnorm(n = n, mean = mean, sd = sd)
   y <- sign(y) * abs(y)^exp # departure from normality
   
