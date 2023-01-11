@@ -178,6 +178,7 @@ for(i in names){
 
 frame <- format(round(frame,digits=1))
 colnames(frame) <- sapply(colnames(frame),function(x) switch(x,class="\\textsc{mcr}",mse="\\textsc{mse}",mae="\\textsc{mae}",auc="\\textsc{auc}",x))
+colnames(frame) <- paste0("$\\textcolor{green}{\\Delta}$",colnames(frame))
 rownames(frame) <- paste0(substr(x=rownames(frame),start=1,stop=5)," ",
                           substr(x=rownames(frame),start=6,stop=6))
 xtable <- xtable::xtable(frame,align="r|ccccc")
