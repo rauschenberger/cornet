@@ -145,15 +145,19 @@ cbind(col,as.character(txt)) # verify
 
 ```{r development,eval=FALSE,echo=FALSE}
 # non-linear effects
-set.seed(1)
 
+auc <- list()
+for(i in 1:10){
+set.seed(i)
 n <- 100; p <- 500
 X <- matrix(stats::rnorm(n*p),nrow=n,ncol=p)
-beta <- stats::rbinom(n=p,size=1,prob=0.1)*stats::rnorm(n=p)
-XX <- sign(X)*abs(X)^rep(sample(c(1/3,1/2,2,3),size=p,replace=TRUE),each=n)
+beta <- stats::rbinom(n=p,size=1,prob=0.05)*stats::rnorm(n=p)
+XX <- sign(X)*abs(X)^rep(sample(c(1/3,3),size=p,replace=TRUE),each=n)
 y <- XX %*% beta
-test <- cv.cornet(y=y,cutoff=0,X=X,alpha=1)
-test$auc
+auc[[i]] <- cv.cornet(y=y,cutoff=0,X=X,alpha=1)$auc
+}
+rowMeans(sapply(auc,function(x) rank(x)))
+rowMeans(sapply(auc,function(x) x))
 
 #i <- sample(seq_len(p),size=1)
 #plot(X[,i],XX[,i])
@@ -165,14 +169,26 @@ test$auc
 #y <- round(1/(1 + exp(- X %*% beta)))
 
 load("results/simulation.RData",verbose=TRUE)
-load("results/application.RData",verbose=TRUE)
-
-loss <- t(sapply(lasso,function(x) x$deviance))
-prop <- loss[,"binomial"]/loss[,"gaussian"]
+loss <- t(sapply(lasso,function(x) x$auc))
 prop <- loss[,"combined"]/loss[,"gaussian"]
+mean(prop)
 plot(prop); abline(h=1,col="grey")
-which.min(prop)
-frame[which.min(prop),]
+which.max(prop)
+frame[which.max(prop),]
+#loss[74,]
+
+auc <- list()
+for(j in 1:10){
+  j <- 74
+  set.seed(j)
+  data <- .simulate(n=frame$n[j],p=500,cor=frame$cor[j],prob=frame$prob[j],sd=frame$sd[j],exp=frame$exp[j],frac=frame$frac[j])
+  auc[[i]] <- cv.cornet(y=data$y,cutoff=data$cutoff,X=data$X,alpha=1)$auc
+}
+
+load("results/application.RData",verbose=TRUE)
+test <- lapply(loss,function(x) sapply(x,function(x) x$auc))
+prop <- lapply(test,function(x) x["combined",]/x["gaussian",])
+mean(unlist(prop))
 ```
 
 
