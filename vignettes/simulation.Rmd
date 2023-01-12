@@ -190,6 +190,12 @@ load("results/application.RData",verbose=TRUE)
 test <- lapply(loss,function(x) sapply(x,function(x) x$auc))
 prop <- lapply(test,function(x) x["combined",]/x["gaussian",])
 mean(unlist(prop))
+
+
+#--- another trial ---
+data <- .simulate(n=150,p=500,cor=0.5,prob=0.05,sd=1,exp=0.5,frac=0.1)
+auc <- cv.cornet(y=data$y,cutoff=data$cutoff,X=data$X,alpha=1)$auc
+
 ```
 
 
