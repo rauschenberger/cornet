@@ -36,9 +36,9 @@ for(i in seq_len(nrow(frame))){
     set.seed(i)
     data <- do.call(what=cornet:::.simulate,args=cbind(frame[i,],p=500))
     set.seed(i)
-    ridge[[i]] <- do.call(what=cornet:::cv.cornet,args=c(data,alpha=0))
+    ridge[[i]] <- do.call(what=cornet:::cv.cornet,args=c(data,alpha=0,rf=TRUE,svm=TRUE))
     set.seed(i)
-    lasso[[i]] <- do.call(what=cornet:::cv.cornet,args=c(data,alpha=1))
+    lasso[[i]] <- do.call(what=cornet:::cv.cornet,args=c(data,alpha=1,rf=TRUE,svm=TRUE))
 }
 names(lasso) <- names(ridge) <- paste0("set",seq_len(nrow(frame)))
 save(lasso,ridge,frame,file="results/simulation.RData")
