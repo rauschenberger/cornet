@@ -768,7 +768,7 @@ cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=N
     }
     
     if(svm){
-      object <- e1071::svm(x=X0,y=as.factor(y0),kernel="linear")
+      object <- e1071::svm(x=X0,y=as.factor(y0))
       pred[foldid.ext==i,"svm"] <- 1*(predict(object,newdata=X1)==1)
     }
     
