@@ -715,6 +715,18 @@ predict.cornet <- function(object,newx,type="probability",...){
 #' 
 cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=NULL,foldid.int=NULL,type.measure="deviance",rf=FALSE,svm=FALSE,...){
   
+  if(rf){
+    if(!"randomForest" %in% rownames(installed.packages())){
+      stop("Requires package 'randomForest'.")
+    }
+  }
+  
+  if(svm){
+    if(!"e1071" %in% rownames(installed.packages())){
+      stop("Requires package 'e1071'.")
+    }
+  }
+  
   z <- 1*(y > cutoff)
   if(is.null(foldid.ext)){
     foldid.ext <- palasso:::.folds(y=z,nfolds=nfolds.ext)
