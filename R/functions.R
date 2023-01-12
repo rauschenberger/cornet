@@ -710,7 +710,7 @@ predict.cornet <- function(object,newx,type="probability",...){
 #' \dontrun{n <- 100; p <- 200
 #' y <- rnorm(n)
 #' X <- matrix(rnorm(n*p),nrow=n,ncol=p)
-#' loss <- cv.cornet(y=y,cutoff=0,X=X)
+#' loss <- cv.cornet(y=y,cutoff=0,X=X,rf=TRUE,svm=TRUE)
 #' loss}
 #' 
 cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=NULL,foldid.int=NULL,type.measure="deviance",rf=FALSE,svm=FALSE,...){
@@ -736,7 +736,7 @@ cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=N
   
   #--- cross-validated loss ---
   
-  cols <- c("intercept","binomial","gaussian","combined","switch")
+  cols <- c("intercept","binomial","gaussian","combined","switch","rf"[rf],"svm"[svm])
   pred <- matrix(data=NA,nrow=length(y),ncol=length(cols),
                  dimnames=list(NULL,cols))
   
@@ -761,6 +761,17 @@ cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=N
     for(j in seq_along(model)){
       pred[foldid.ext==i,model[j]] <- temp[[model[j]]]
     }
+    
+    if(rf){
+      object <- randomForest::randomForest(x=X0,y=as.factor(z0))
+      pred[foldid.ext==i,"rf"] <- 1*(predict(object,newdata=X1)==1)
+    }
+    
+    if(svm){
+      object <- e1071::svm(x=X0,y=as.factor(y0),kernel="linear")
+      pred[foldid.ext==i,"svm"] <- 1*(predict(object,newdata=X1)==1)
+    }
+    
   }
   
   type <- c("deviance","class","mse","mae","auc")
