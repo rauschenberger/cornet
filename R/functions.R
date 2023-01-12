@@ -690,6 +690,14 @@ predict.cornet <- function(object,newx,type="probability",...){
 #' between \eqn{1} and \code{nfolds.int};
 #' or \code{NULL}
 #' 
+#' @param rf
+#' comparison with random forest\strong{:}
+#' logical
+#' 
+#' @param svm
+#' comparison with support vector machine\strong{:}
+#' logical
+#' 
 #' @param ... further arguments passed to
 #' \code{\link[cornet]{cornet}} or \code{\link[glmnet]{glmnet}}
 #' 
@@ -705,7 +713,7 @@ predict.cornet <- function(object,newx,type="probability",...){
 #' loss <- cv.cornet(y=y,cutoff=0,X=X)
 #' loss}
 #' 
-cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=NULL,foldid.int=NULL,type.measure="deviance",...){
+cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=NULL,foldid.int=NULL,type.measure="deviance",rf=FALSE,svm=FALSE,...){
   
   z <- 1*(y > cutoff)
   if(is.null(foldid.ext)){
