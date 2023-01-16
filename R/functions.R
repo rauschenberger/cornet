@@ -768,7 +768,7 @@ cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=N
     }
     
     if(svm){
-      object <- e1071::svm(x=X0,y=as.factor(y0),probability=TRUE)
+      object <- e1071::svm(x=X0,y=as.factor(z0),probability=TRUE)
       pred[foldid.ext==i,"svm"] <- attributes(predict(object,newdata=X1,probability=TRUE))$probabilities[,2]
     }
     
