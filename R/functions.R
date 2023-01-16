@@ -763,13 +763,13 @@ cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=N
     }
     
     if(rf){
-      object <- randomForest::randomForest(x=X0,y=as.factor(z0))
-      pred[foldid.ext==i,"rf"] <- 1*(predict(object,newdata=X1)==1)
+      object <- randomForest::randomForest(x=X0,y=as.factor(z0),norm.votes=TRUE)
+      pred[foldid.ext==i,"rf"] <- predict(object,newdata=X1,type="prob")[,2]
     }
     
     if(svm){
-      object <- e1071::svm(x=X0,y=as.factor(y0))
-      pred[foldid.ext==i,"svm"] <- 1*(predict(object,newdata=X1)==1)
+      object <- e1071::svm(x=X0,y=as.factor(y0),probability=TRUE)
+      pred[foldid.ext==i,"svm"] <- attributes(predict(object,newdata=X1,probability=TRUE))$probabilities[,2]
     }
     
   }
