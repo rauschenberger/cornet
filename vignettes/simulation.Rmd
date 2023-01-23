@@ -169,22 +169,21 @@ rowMeans(sapply(auc,function(x) x))
 
 #y <- round(1/(1 + exp(- X %*% beta)))
 
-load("results/simulation.RData",verbose=TRUE)
+load("results/simulation_old.RData",verbose=TRUE)
 loss <- t(sapply(lasso,function(x) x$auc))
-prop <- loss[,"combined"]/loss[,"gaussian"]
-mean(prop)
-plot(prop); abline(h=1,col="grey")
-which.max(prop)
-frame[which.max(prop),]
-#loss[74,]
+prop <- loss[,"binomial"]/loss[,"gaussian"]
+j <- which.max(prop)
+frame[j,]
+loss[j,]
 
 auc <- list()
-for(j in 1:10){
-  j <- 74
+for(i in 1:10){
   set.seed(j)
   data <- .simulate(n=frame$n[j],p=500,cor=frame$cor[j],prob=frame$prob[j],sd=frame$sd[j],exp=frame$exp[j],frac=frame$frac[j])
   auc[[i]] <- cv.cornet(y=data$y,cutoff=data$cutoff,X=data$X,alpha=1)$auc
 }
+colMeans(do.call(what="rbind",args=auc))
+
 
 load("results/application.RData",verbose=TRUE)
 test <- lapply(loss,function(x) sapply(x,function(x) x$auc))
@@ -195,6 +194,14 @@ mean(unlist(prop))
 #--- another trial ---
 data <- .simulate(n=150,p=500,cor=0.5,prob=0.05,sd=1,exp=0.5,frac=0.1)
 auc <- cv.cornet(y=data$y,cutoff=data$cutoff,X=data$X,alpha=1)$auc
+
+
+#--- performance of RF and SVM ---
+load("results/simulation.RData",verbose=TRUE)
+loss <- as.data.frame(t(sapply(lasso,function(x) x$auc)))
+colMeans(loss)
+
+load("results/simulation_old.RData",verbose=TRUE)
 
 ```
 
