@@ -76,7 +76,9 @@ graphics::boxplot(fuse0,at=at+0.5,add=TRUE,axes=FALSE,col="white",border="darkgr
 labels <- names(fuse1)
 labels <- ifelse(labels=="class","mcr",labels)
 labels <- ifelse(labels %in% c("mcr","mse","mae","auc"),toupper(labels),labels)
-graphics::axis(side=1,at=at,labels=labels)
+for(i in seq_along(labels)){
+  graphics::axis(side=1,at=at[i],labels=bquote(Delta ~ .(labels[i])))
+}
 grDevices::dev.off()
 
 # decrease
