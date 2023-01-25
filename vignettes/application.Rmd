@@ -96,7 +96,7 @@ writeLines(text=capture.output(utils::sessionInfo(),cat("\n"),
 
 # Results
 
-```{r compare}
+```{r table_pool}
 load("results/application.RData",verbose=TRUE)
 
 if(FALSE){ # temporary 2022-05-12
@@ -154,7 +154,7 @@ xtable::print.xtable(xtable,include.rownames=TRUE,sanitize.text.function=functio
 ```
 
 
-```{r trial}
+```{r table_other}
 load("results/application.RData",verbose=TRUE)
 
 names <- c(paste0("lasso",1:3),paste0("ridge",1:3))
@@ -177,6 +177,7 @@ for(i in names){
 #frame[,] <- paste0(median," [",min,",",max,"]")
 
 frame <- format(round(frame,digits=1))
+frame <- gsub(pattern=" ",replacement="\\\\textcolor{green}{+}",x=frame)
 colnames(frame) <- sapply(colnames(frame),function(x) switch(x,class="\\textsc{mcr}",mse="\\textsc{mse}",mae="\\textsc{mae}",auc="\\textsc{auc}",x))
 colnames(frame) <- paste0("$\\textcolor{green}{\\Delta}$",colnames(frame))
 rownames(frame) <- paste0(substr(x=rownames(frame),start=1,stop=5)," ",
