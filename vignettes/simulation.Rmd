@@ -147,7 +147,22 @@ cbind(col,as.character(txt)) # verify
 
 
 ```{r development,eval=FALSE,echo=FALSE}
-# non-linear effects
+#--- adding noise ---
+
+loss <- list()
+for(i in 1:10){
+  n <- 100; p <- 500
+  X <- matrix(stats::rnorm(n*p),nrow=n,ncol=p)
+  eta <- X[,1]+X[,2]+X[,3]+stats::rnorm(n)
+  z <- 2*round(1/(1+exp(-eta)))-1
+  y <- 2*z + stats::rnorm(n)
+  loss[[i]] <- cornet::cv.cornet(y=y,cutoff=0,X=X)
+}
+boxplot(y~z)
+dev <- sapply(loss,function(x) x$deviance)
+rowMeans(dev)
+
+#--- non-linear effects ---
 
 auc <- list()
 for(i in 1:10){
