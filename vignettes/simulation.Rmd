@@ -149,6 +149,7 @@ cbind(col,as.character(txt)) # verify
 ```{r development,eval=FALSE,echo=FALSE}
 #--- adding noise ---
 
+# example where combined regression outperforms transformed linear regression:
 loss <- list()
 for(i in 1:10){
   n <- 100; p <- 500
@@ -156,11 +157,33 @@ for(i in 1:10){
   eta <- X[,1]+X[,2]+X[,3]+stats::rnorm(n)
   z <- 2*round(1/(1+exp(-eta)))-1
   y <- 2*z + stats::rnorm(n)
-  loss[[i]] <- cornet::cv.cornet(y=y,cutoff=0,X=X)
+  loss[[i]] <- cv.cornet(y=y,cutoff=0,X=X)
 }
-boxplot(y~z)
-dev <- sapply(loss,function(x) x$deviance)
-rowMeans(dev)
+dev <- t(sapply(loss,function(x) x$dev))
+colMeans(dev)
+
+# example where combined regression outperforms logistic regression:
+loss <- list()
+for(i in 1:10){
+  n <- 100; p <- 500
+  X <- matrix(stats::rnorm(n*p),nrow=n,ncol=p)
+  eta <- X[,1]+X[,2]+X[,3]+stats::rnorm(n)
+  y <- eta
+  loss[[i]] <- cv.cornet(y=y,cutoff=0,X=X)
+}
+dev <- t(sapply(loss,function(x) x$dev))
+colMeans(dev)
+
+
+
+#boxplot(y~z)
+dev <- t(sapply(loss,function(x) x$deviance))
+dev <- dev/dev[,"intercept"]
+graphics::par(mar=c(3,3,1,1))
+graphics::plot(dev[,"gaussian"],ylim=range(dev),type="l",col="blue")
+graphics::lines(dev[,"binomial"],ylim=range(dev),type="l",col="red")
+graphics::lines(dev[,"combined"],ylim=range(dev),type="l",col="black")
+rowMeans(apply(dev,1,rank))
 
 #--- non-linear effects ---
 
