@@ -18,6 +18,45 @@ setwd("~/Desktop/cornet")
 #devtools::install_github("rauschenberger/cornet")
 ```
 
+# Graphical abstract
+
+```{r}
+grDevices::pdf("manuscript/figure_idea.pdf",width=5,height=2.5)
+
+box <- function(x,y,width=0.22,height=0.2,labels="",col="black",...){
+  xs <- x + 0.5*c(-1,-1,1,1)*width
+  ys <- y + 0.5*c(-1,1,1,-1)*height
+  graphics::polygon(x=xs,y=ys,border=col,lwd=2,...)
+  graphics::text(x=x,y=y,labels=labels,col=col)
+}
+
+graphics::par(mar=c(0,0,0,0))
+graphics::plot.new()
+graphics::plot.window(xlim=c(0,1),ylim=c(0,1))
+
+v <- h <- 0.1
+
+box(x=0+h,y=0.5,labels="dichotomised\noutcome")
+box(x=0.5,y=1-v,labels="initial binary\nclassification",col="red")
+box(x=0.5,y=0+v,labels="numerical\nprediction",col="blue")
+box(x=1-h,y=0.5,labels="final binary\nclassification",col="red")
+
+d <- 0.02
+graphics::arrows(x0=0.2+d,y0=0.5+c(-d,d),x1=0.4-d,y1=c(v,1-v),lwd=2,col=c("blue","red"))
+graphics::arrows(x0=0.6+d,y0=c(v,1-v),x1=0.8-d,y1=0.5+c(-d,d),lwd=2,col=c("blue","red"))
+
+#graphics::text(x=0.32,y=0.6,labels=expression(gamma),col=red,cex=2)
+graphics::text(x=0.35,y=0.55,labels="logistic\nregression",col="red",cex=0.7,pos=3)
+#graphics::text(x=0.32,y=0.4,labels=expression(beta),col=blue,cex=2)
+graphics::text(x=0.35,y=0.45,labels="linear\nregression",col="blue",cex=0.7,pos=1)
+#graphics::text(x=0.95,y=0.5,labels=bquote(sigma~pi),col="grey",cex=2)
+graphics::text(x=0.63,y=0.5,labels="combine\npredicted\nprobabilities",col="grey",cex=0.7)
+graphics::text(x=0.8,y=0.3,labels="transform\npredicted values to\npredicted probabilities",col="grey",cex=0.7,pos=1)
+
+grDevices::dev.off()
+```
+
+
 # Analysis
 
 ```{r analysis}
@@ -159,8 +198,9 @@ for(i in 1:10){
   y <- 2*z + stats::rnorm(n)
   loss[[i]] <- cv.cornet(y=y,cutoff=0,X=X)
 }
-dev <- t(sapply(loss,function(x) x$dev))
+dev <- as.data.frame(t(sapply(loss,function(x) x$dev)))
 colMeans(dev)
+stats::wilcox.test(x=dev$combined,y=dev$gaussian,paired=TRUE,alternative="less")
 
 # example where combined regression outperforms logistic regression:
 loss <- list()
@@ -171,8 +211,9 @@ for(i in 1:10){
   y <- eta
   loss[[i]] <- cv.cornet(y=y,cutoff=0,X=X)
 }
-dev <- t(sapply(loss,function(x) x$dev))
+dev <- as.data.frame(t(sapply(loss,function(x) x$dev)))
 colMeans(dev)
+stats::wilcox.test(x=dev$combined,y=dev$binomial,paired=TRUE,alternative="less")
 
 
 
