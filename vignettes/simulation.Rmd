@@ -20,14 +20,14 @@ setwd("~/Desktop/cornet")
 
 # Graphical abstract
 
-```{r}
+```{r abstract}
 grDevices::pdf("manuscript/figure_idea.pdf",width=5,height=2.5)
 
-box <- function(x,y,width=0.22,height=0.2,labels="",col="black",...){
+box <- function(x,y,width=0.22,height=0.2,labels="",cex=1,col="black",...){
   xs <- x + 0.5*c(-1,-1,1,1)*width
   ys <- y + 0.5*c(-1,1,1,-1)*height
   graphics::polygon(x=xs,y=ys,border=col,lwd=2,...)
-  graphics::text(x=x,y=y,labels=labels,col=col)
+  graphics::text(x=x,y=y,labels=labels,col=col,cex=cex)
 }
 
 graphics::par(mar=c(0,0,0,0))
@@ -36,8 +36,8 @@ graphics::plot.window(xlim=c(0,1),ylim=c(0,1))
 
 v <- h <- 0.1
 
-box(x=0+h,y=0.5,labels="outcomes\nfeatures")
-graphics::text(x=h,y=0.495,labels="+")
+box(x=0+h,y=0.5,labels="outcomes,\nfeatures")
+#graphics::text(x=h,y=0.495,labels="+")
 box(x=0.5,y=1-v,labels="initial binary\nclassification",col="red")
 box(x=0.5,y=0+v,labels="numerical\nprediction",col="blue")
 box(x=1-h,y=0.5,labels="final binary\nclassification",col="red")
@@ -47,9 +47,9 @@ graphics::arrows(x0=0.2+d,y0=0.5+c(-d,d),x1=0.4-d,y1=c(v,1-v),lwd=2,col=c("blue"
 graphics::arrows(x0=0.6+d,y0=c(v,1-v),x1=0.8-d,y1=0.5+c(-d,d),lwd=2,col=c("blue","red"))
 
 #graphics::text(x=0.32,y=0.6,labels=expression(gamma),col=red,cex=2)
-graphics::text(x=0.35,y=0.55,labels="logistic\nregression",col="red",cex=0.7,pos=3)
+graphics::text(x=0.4,y=0.55,labels="binary outcome:\nlogistic regression",col="red",cex=0.7,pos=3)
 #graphics::text(x=0.32,y=0.4,labels=expression(beta),col=blue,cex=2)
-graphics::text(x=0.35,y=0.45,labels="linear\nregression",col="blue",cex=0.7,pos=1)
+graphics::text(x=0.4,y=0.45,labels="numerical outcome:\nlinear regression",col="blue",cex=0.7,pos=1)
 #graphics::text(x=0.95,y=0.5,labels=bquote(sigma~pi),col="grey",cex=2)
 graphics::text(x=0.63,y=0.5,labels="combine\npredicted\nprobabilities",col="grey",cex=0.7)
 graphics::text(x=0.8,y=0.3,labels="transform\npredicted values to\npredicted probabilities",col="grey",cex=0.7,pos=1)
@@ -185,11 +185,52 @@ for(k in c("ridge","lasso")){
 cbind(col,as.character(txt)) # verify
 ```
 
+```{r examples,eval=FALSE,echo=FALSE}
+# This chunk shows examples where combined regression outperforms transformed linear regression.
 
-```{r development,eval=FALSE,echo=FALSE}
-#--- adding noise ---
+# Note: 'latent: binary variable contains all information', 'asymmetric + outliers: linear regression fails to capture all signal'
 
-# example where combined regression outperforms transformed linear regression:
+rm(list=ls())
+n <- 100
+
+mode <- c("standard","latent","asymmetric","outliers")
+loss <- sapply(mode,function(x) list())
+for(i in seq_along(mode)){
+  cat(i)
+  for(j in seq_len(10)){ # increase to 100
+    cat(j)
+    n0 <- 100; n1 <- 10000; p <- 500
+    # simulate correlated features?
+    X <- matrix(data=stats::rnorm(n*p),nrow=n,ncol=p)
+    beta <- stats::rbinom(n=p,size=1,prob=0.05)*stats::rnorm(n=p)
+    # but then use constant signs for betas!
+    eta <- X %*% beta + stats::rnorm(n=n)
+    if(mode[i]=="standard"){
+      y <- eta 
+    } else if(mode[i]=="latent"){
+      z <- 2*round(1/(1+exp(-eta)))-1
+      y <- 2*z + stats::rnorm(n)
+    } else if(mode[i]=="asymmetric"){
+      y <- ifelse(eta<0,-sqrt(abs(eta)),eta^2)
+    } else if(mode[i]=="outliers"){
+      y <- eta + stats::rbinom(n=n,size=1,prob=0.05)*5*sd(eta) # allow for sign switch
+    }
+    foldid <- rep(c(0,1),times=c(n0,n1))
+    loss[[mode[i]]][[j]] <- cv.cornet(y=y,cutoff=0,X=X,rf=TRUE,svm=TRUE) # use hold-out method instead (unlimited testing data are available!)
+  }
+}
+
+deviance <- lapply(loss,function(x) as.data.frame(t(sapply(x,function(x) x$deviance))))
+lapply(deviance,colMeans)
+
+# make boxplots
+# make hypothesis tests
+# repeat analysis for ridge and lasso
+
+#--- separate chunks (to be removed) ---
+
+# latent variable
+
 loss <- list()
 for(i in 1:10){
   n <- 100; p <- 500
@@ -203,7 +244,42 @@ dev <- as.data.frame(t(sapply(loss,function(x) x$dev)))
 colMeans(dev)
 stats::wilcox.test(x=dev$combined,y=dev$gaussian,paired=TRUE,alternative="less")
 
+# asymmetric
+
+loss <- list()
+for(i in 1:10){
+  n <- 100; p <- 500
+  X <- matrix(stats::rnorm(n*p),nrow=n,ncol=p)
+  eta <- X[,1]+X[,2]+X[,3]+stats::rnorm(n)
+  y <- ifelse(eta<0,-sqrt(abs(eta)),eta^2)
+  loss[[i]] <- cv.cornet(y=y,cutoff=0,X=X)
+}
+dev <- as.data.frame(t(sapply(loss,function(x) x$dev)))
+colMeans(dev)
+stats::wilcox.test(x=dev$combined,y=dev$gaussian,paired=TRUE,alternative="less")
+
+# outliers
+
+loss <- list()
+for(i in 1:10){
+  n <- 100; p <- 500
+  X <- matrix(stats::rnorm(n*p),nrow=n,ncol=p)
+  eta <- X[,1]+X[,2]+X[,3]+stats::rnorm(n)
+  y <- eta + stats::rbinom(n=n,size=1,prob=0.1)*runif(n=n,min=-20,max=20)
+  loss[[i]] <- cv.cornet(y=y,cutoff=0,X=X)
+}
+dev <- as.data.frame(t(sapply(loss,function(x) x$dev)))
+colMeans(dev)
+stats::wilcox.test(x=dev$combined,y=dev$gaussian,paired=TRUE,alternative="less")
+
+```
+
+
+```{r development,eval=FALSE,echo=FALSE}
+#--- adding noise ---
+
 # example where combined regression outperforms logistic regression:
+
 loss <- list()
 for(i in 1:10){
   n <- 100; p <- 500
@@ -217,7 +293,6 @@ colMeans(dev)
 stats::wilcox.test(x=dev$combined,y=dev$binomial,paired=TRUE,alternative="less")
 
 
-
 #boxplot(y~z)
 dev <- t(sapply(loss,function(x) x$deviance))
 dev <- dev/dev[,"intercept"]
@@ -226,6 +301,27 @@ graphics::plot(dev[,"gaussian"],ylim=range(dev),type="l",col="blue")
 graphics::lines(dev[,"binomial"],ylim=range(dev),type="l",col="red")
 graphics::lines(dev[,"combined"],ylim=range(dev),type="l",col="black")
 rowMeans(apply(dev,1,rank))
+
+# combined example (useless)
+
+w <- 0.9
+loss <- list()
+for(i in 1:10){
+  n <- 100; p <- 500
+  X <- matrix(stats::rnorm(n*p),nrow=n,ncol=p)
+  eta <- scale(X[,1]+X[,2]+X[,3])
+  eta[is.na(eta)] <- 0
+  z <- 2*round(1/(1+exp(-eta)))-1
+  y <- (1-w)*eta + w*z + 0.5*stats::rnorm(n) 
+  loss[[i]] <- cv.cornet(y=y,cutoff=0,X=X)
+}
+dev <- as.data.frame(t(sapply(loss,function(x) x$dev)))
+colMeans(dev)
+stats::wilcox.test(x=dev$combined,y=dev$gaussian,paired=TRUE,alternative="less")
+stats::wilcox.test(x=dev$combined,y=dev$binomial,paired=TRUE,alternative="less")
+graphics::boxplot(y~z)
+table(y>=0,z)
+
 
 #--- non-linear effects ---
 
