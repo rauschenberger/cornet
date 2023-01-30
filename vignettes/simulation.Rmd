@@ -190,15 +190,15 @@ cbind(col,as.character(txt)) # verify
 
 # Note: 'latent: binary variable contains all information', 'asymmetric + outliers: linear regression fails to capture all signal'
 
-rm(list=ls())
+#rm(list=ls())
 n <- 100
 
 mode <- c("standard","latent","asymmetric","outliers")
 loss <- sapply(mode,function(x) list())
 for(i in seq_along(mode)){
-  cat(i)
+  cat("mode:",mode[i],"\n")
   for(j in seq_len(10)){ # increase to 100
-    cat(j)
+    cat("iteration:",j,"\n")
     n0 <- 100; n1 <- 10000; p <- 500
     # simulate correlated features?
     X <- matrix(data=stats::rnorm(n*p),nrow=n,ncol=p)
@@ -220,8 +220,35 @@ for(i in seq_along(mode)){
   }
 }
 
+
+graphics::par(mfrow=c(2,2),mar=c(3,3,1,1))
+pos <- c(binomial=1,combined=2,gaussian=3)
+col <- c(binomial="red",combined="grey",gaussian="blue")
+cex <- 0.7
+names <- c("binomial","combined","gaussian")
+for(i in seq_along(mode)){
+  frame <- as.data.frame(t(sapply(loss[[i]],function(x) x$deviance)))
+  frame <- frame/frame$intercept # optional standardisation
+  #graphics::plot.new()
+  #graphics::plot.window(xlim=c(min(pos)-0.5,max(pos)+0.5),ylim=range(frame))
+  #graphics::box()
+  #graphics::axis(side=1,at=pos,labels=names(pos),cex.axis=cex)
+  #graphics::axis(side=2,cex.axis=cex)
+  graphics::boxplot(x=frame[,names],at=pos[names],col=col[names],cex.axis=0.7,main=i)
+  for(j in c("binomial","combined","gaussian")){
+    #graphics::boxplot(x=frame[[j]],at=pos[[j]],col=col[[j]],add=TRUE,ann=FALSE)
+    mean <- mean(frame[[j]])
+    graphics::points(x=pos[j],y=mean,pch=16)
+    if(j=="combined"){next}
+    pvalue <- stats::wilcox.test(x=frame$combined,y=frame[[j]],alternative="less")$p.value
+    graphics::text(x=mean(c(pos["combined"],pos[[j]])),y=min(frame),labels=paste0("p=",signif(pvalue,digits=2)),pos=3,cex=0.7)
+  }
+}
+
+
+
 deviance <- lapply(loss,function(x) as.data.frame(t(sapply(x,function(x) x$deviance))))
-lapply(deviance,colMeans)
+lapply(deviance,function(x) round(colMeans(x),digits=2))
 
 # make boxplots
 # make hypothesis tests
