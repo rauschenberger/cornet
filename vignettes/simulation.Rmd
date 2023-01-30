@@ -197,7 +197,7 @@ mode <- c("standard","latent","asymmetric","outliers")
 loss <- sapply(mode,function(x) list())
 for(i in seq_along(mode)){
   cat("mode:",mode[i],"\n")
-  for(j in seq_len(10)){ # increase to 100
+  for(j in seq_len(100)){ # increase to 100
     cat("iteration:",j,"\n")
     n0 <- 100; n1 <- 10000; p <- 500
     # simulate correlated features?
@@ -209,11 +209,11 @@ for(i in seq_along(mode)){
       y <- eta 
     } else if(mode[i]=="latent"){
       z <- 2*round(1/(1+exp(-eta)))-1
-      y <- 2*z + stats::rnorm(n)
+      y <- 2*z + stats::rnorm(n) # Decrease noise? 
     } else if(mode[i]=="asymmetric"){
       y <- ifelse(eta<0,-sqrt(abs(eta)),eta^2)
     } else if(mode[i]=="outliers"){
-      y <- eta + stats::rbinom(n=n,size=1,prob=0.05)*5*sd(eta) # allow for sign switch
+      y <- eta + stats::rbinom(n=n,size=1,prob=0.05)*5*sd(eta)*(2*stats::rbinom(n=n,size=1,prob=0.5)-1) # Remove sign switch? Increase proportion?
     }
     foldid <- rep(c(0,1),times=c(n0,n1))
     loss[[mode[i]]][[j]] <- cv.cornet(y=y,cutoff=0,X=X,rf=TRUE,svm=TRUE) # use hold-out method instead (unlimited testing data are available!)
@@ -241,7 +241,7 @@ for(i in seq_along(mode)){
     graphics::points(x=pos[j],y=mean,pch=16)
     if(j=="combined"){next}
     pvalue <- stats::wilcox.test(x=frame$combined,y=frame[[j]],alternative="less")$p.value
-    graphics::text(x=mean(c(pos["combined"],pos[[j]])),y=min(frame),labels=paste0("p=",signif(pvalue,digits=2)),pos=3,cex=0.7)
+    graphics::text(x=mean(c(pos["combined"],pos[[j]])),y=min(frame),labels=paste0("p=",format(pvalue,digits=2,scientific=TRUE)),pos=3,cex=0.7)
   }
 }
 
