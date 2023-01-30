@@ -731,7 +731,7 @@ cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=N
   if(is.null(foldid.ext)){
     foldid.ext <- palasso:::.folds(y=z,nfolds=nfolds.ext)
   } else {
-    nfolds.ext <- length(unique(foldid.ext))
+    nfolds.ext <- max(foldid.ext)
   }
   
   #--- cross-validated loss ---
