@@ -775,7 +775,7 @@ cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=N
   }
   
   type <- c("deviance","class","mse","mae","auc")
-  loss <- lapply(X=type,FUN=function(x) palasso:::.loss(y=z[foldid.ext!=0],fit=pred[foldid.ext!=0,],family="binomial",type.measure=x,foldid=foldid.ext)[[1]])
+  loss <- lapply(X=type,FUN=function(x) palasso:::.loss(y=z[foldid.ext!=0],fit=pred[foldid.ext!=0,],family="binomial",type.measure=x,foldid=foldid.ext[foldid.ext!=0])[[1]])
   names(loss) <- type
   
   # if(FALSE){
