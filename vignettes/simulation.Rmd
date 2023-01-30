@@ -186,7 +186,7 @@ cbind(col,as.character(txt)) # verify
 ```
 
 ```{r examples,eval=FALSE,echo=FALSE}
-# This chunk shows examples where combined regression outperforms transformed linear regression.
+# This chunk shows one example where combined regression outperforms logistic regression and three examples where combined regression outperforms transformed linear regression.
 
 # Note: 'latent: binary variable contains all information', 'asymmetric + outliers: linear regression fails to capture all signal'
 
@@ -197,9 +197,11 @@ mode <- c("standard","latent","asymmetric","outliers")
 loss <- sapply(mode,function(x) list())
 for(i in seq_along(mode)){
   cat("mode:",mode[i],"\n")
-  for(j in seq_len(100)){ # increase to 100
+  for(j in seq_len(10)){ # increase to 100
+    set.seed(j)
     cat("iteration:",j,"\n")
     n0 <- 100; n1 <- 10000; p <- 500
+    n <- n0 + n1
     # simulate correlated features?
     X <- matrix(data=stats::rnorm(n*p),nrow=n,ncol=p)
     beta <- stats::rbinom(n=p,size=1,prob=0.05)*stats::rnorm(n=p)
@@ -209,17 +211,16 @@ for(i in seq_along(mode)){
       y <- eta 
     } else if(mode[i]=="latent"){
       z <- 2*round(1/(1+exp(-eta)))-1
-      y <- 2*z + stats::rnorm(n) # Decrease noise? 
+      y <- 2*z + stats::rnorm(n)
     } else if(mode[i]=="asymmetric"){
       y <- ifelse(eta<0,-sqrt(abs(eta)),eta^2)
     } else if(mode[i]=="outliers"){
-      y <- eta + stats::rbinom(n=n,size=1,prob=0.05)*5*sd(eta)*(2*stats::rbinom(n=n,size=1,prob=0.5)-1) # Remove sign switch? Increase proportion?
+      y <- eta + stats::rbinom(n=n,size=1,prob=0.05)*5*sd(eta)*(2*stats::rbinom(n=n,size=1,prob=0.5)-1)
     }
     foldid <- rep(c(0,1),times=c(n0,n1))
-    loss[[mode[i]]][[j]] <- cv.cornet(y=y,cutoff=0,X=X,rf=TRUE,svm=TRUE) # use hold-out method instead (unlimited testing data are available!)
+    loss[[mode[i]]][[j]] <- cv.cornet(y=y,cutoff=0,X=X,rf=TRUE,svm=TRUE,foldid.ext=foldid)
   }
 }
-
 
 graphics::par(mfrow=c(2,2),mar=c(3,3,1,1))
 pos <- c(binomial=1,combined=2,gaussian=3)
@@ -248,61 +249,6 @@ for(i in seq_along(mode)){
     graphics::text(x=mean(c(pos["combined"],pos[[j]])),y=min(frame),labels=paste0("p=",format(pvalue,digits=2,scientific=TRUE),signif),pos=3,cex=0.7)
   }
 }
-
-
-
-deviance <- lapply(loss,function(x) as.data.frame(t(sapply(x,function(x) x$deviance))))
-lapply(deviance,function(x) round(colMeans(x),digits=2))
-
-# make boxplots
-# make hypothesis tests
-# repeat analysis for ridge and lasso
-
-#--- separate chunks (to be removed) ---
-
-# latent variable
-
-loss <- list()
-for(i in 1:10){
-  n <- 100; p <- 500
-  X <- matrix(stats::rnorm(n*p),nrow=n,ncol=p)
-  eta <- X[,1]+X[,2]+X[,3]+stats::rnorm(n)
-  z <- 2*round(1/(1+exp(-eta)))-1
-  y <- 2*z + stats::rnorm(n)
-  loss[[i]] <- cv.cornet(y=y,cutoff=0,X=X)
-}
-dev <- as.data.frame(t(sapply(loss,function(x) x$dev)))
-colMeans(dev)
-stats::wilcox.test(x=dev$combined,y=dev$gaussian,paired=TRUE,alternative="less")
-
-# asymmetric
-
-loss <- list()
-for(i in 1:10){
-  n <- 100; p <- 500
-  X <- matrix(stats::rnorm(n*p),nrow=n,ncol=p)
-  eta <- X[,1]+X[,2]+X[,3]+stats::rnorm(n)
-  y <- ifelse(eta<0,-sqrt(abs(eta)),eta^2)
-  loss[[i]] <- cv.cornet(y=y,cutoff=0,X=X)
-}
-dev <- as.data.frame(t(sapply(loss,function(x) x$dev)))
-colMeans(dev)
-stats::wilcox.test(x=dev$combined,y=dev$gaussian,paired=TRUE,alternative="less")
-
-# outliers
-
-loss <- list()
-for(i in 1:10){
-  n <- 100; p <- 500
-  X <- matrix(stats::rnorm(n*p),nrow=n,ncol=p)
-  eta <- X[,1]+X[,2]+X[,3]+stats::rnorm(n)
-  y <- eta + stats::rbinom(n=n,size=1,prob=0.1)*runif(n=n,min=-20,max=20)
-  loss[[i]] <- cv.cornet(y=y,cutoff=0,X=X)
-}
-dev <- as.data.frame(t(sapply(loss,function(x) x$dev)))
-colMeans(dev)
-stats::wilcox.test(x=dev$combined,y=dev$gaussian,paired=TRUE,alternative="less")
-
 ```
 
 
