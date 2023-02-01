@@ -196,7 +196,7 @@ loss <- list()
 for(i in seq_len(4)){
   loss[[i]] <- list()
   cat("mode:",i,"\n")
-  for(j in seq_len(10)){
+  for(j in seq_len(100)){
     set.seed(j)
     cat("iteration:",j,"\n")
     n0 <- 100; n1 <- 10000; p <- 500
@@ -207,17 +207,10 @@ for(i in seq_len(4)){
     if(i==1){
       y <- eta 
     } else if(i==2){
-      #z <- 2*round(1/(1+exp(-eta)))-1
-      #y <- z + sample(x=c(-0.9,0,0.9),replace=TRUE,size=n) # discrete
-      # consider scale from 0-10 with 'mistakes' on both sides (decreasing/increasing probability)
-      #y <- z + runif(n=n,min=-1.1,max=1.1)
-      #y <- 2*z + stats::rnorm(n,sd=1) # was 2*z and sd=1
       y <- ifelse(eta<0,-1,+1)*abs(stats::rnorm(n))
     } else if(i==3){
       y <- ifelse(eta<0,-sqrt(abs(eta)),eta^2)
     } else if(i==4){
-      #y <- eta + stats::rbinom(n=n,size=1,prob=0.05)*5*sd(eta)*(2*stats::rbinom(n=n,size=1,prob=0.5)-1)
-      #y <- eta + stats::rbinom(n=n,size=1,prob=0.05)*stats::rnorm(n=n,sd=10)
       y <- eta + stats::rbinom(n=n,size=1,prob=0.05)*(2*stats::rbinom(n=n,size=1,prob=0.5)-1)*1.5*max(abs(eta))
     }
     foldid <- rep(c(0,1),times=c(n0,n1))
