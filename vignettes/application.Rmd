@@ -84,9 +84,9 @@ for(i in seq_along(x)){
       fit[[i]][[names[j]]] <- cornet::cornet(y=y[cond],cutoff=25.5,
                                   X=x[[i]][cond,],alpha=alpha)
       set.seed(i)
-      temp <- median(replicate(n=50,expr=cornet:::.test(y=y[cond],cutoff=25.5,X=x[[i]][cond,],alpha=alpha)))
-      p.log[[i]][[names[j]]] <- temp$log
-      p.lin[[i]][[names[j]]] <- temp$lin
+      temp <- replicate(n=50,expr=cornet:::.test(y=y[cond],cutoff=25.5,X=x[[i]][cond,],alpha=alpha))
+      p.log[[i]][[names[j]]] <- median(unlist(temp["log",]))
+      p.lin[[i]][[names[j]]] <- median(unlist(temp["lin",]))
     }
     cat("\n")
 }
