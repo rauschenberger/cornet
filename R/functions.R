@@ -847,7 +847,11 @@ cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=N
   pred[pred < limit] <- limit
   pred[pred > 1 - limit] <- 1 - limit
   res <- -2 * (z[fold==1] * log(pred) + (1 - z[fold==1]) * log(1 - pred))
-  pvalue <- stats::wilcox.test(x=res[,"binomial"],y=res[,"combined"],paired=TRUE,alternative="greater")$p.value
+  #pvalue <- stats::wilcox.test(x=res[,"binomial"],y=res[,"combined"],paired=TRUE,alternative="greater")$p.value
+  
+  pvalue <- list()
+  pvalue$log <- stats::wilcox.test(x=res[,"combined"],y=res[,"binomial"],paired=TRUE,alternative="less")$p.value
+  pvalue$lin <- stats::wilcox.test(x=res[,"combined"],y=res[,"gaussian"],paired=TRUE,alternative="less")$p.value
   
   ##equality logistic deviance
   #colMeans(res)
