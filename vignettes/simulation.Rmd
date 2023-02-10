@@ -203,15 +203,26 @@ for(i in seq_len(4)){
     n <- n0 + n1
     X <- matrix(data=stats::rnorm(n*p),nrow=n,ncol=p)
     beta <- stats::rbinom(n=p,size=1,prob=0.05)*stats::rnorm(n=p)
-    eta <- X %*% beta + stats::rnorm(n=n)
+    # eta <- X %*% beta + stats::rnorm(n=n) # original
+    eta <- X %*% beta # trial
+    epsilon <- stats::rnorm(n=n)
     if(i==1){
-      y <- eta 
+      #y <- eta # original
+      y <- eta + epsilon # trial
     } else if(i==2){
-      y <- ifelse(eta<0,-1,+1)*abs(stats::rnorm(n))
+      #y <- ifelse(eta<0,-3,3) + stats::rnorm(n=n)
+      #y <- ifelse(eta<0,-stats::runif(n),+stats::runif(n))
+      #y <- ifelse(eta<0,stats::rnorm(n=n,mean=-2),stats::rnorm(n=n,mean=2))
+      #y <- ifelse(eta<0,stats::rnorm(n=n,mean=-1,sd=0.4),stats::rnorm(n=n,mean=1,sd=0.4))
+      #y <- ifelse(eta<0,-1,+1)*abs(stats::rnorm(n)) # original
+      y <- ifelse(eta<0,-2,+2)+epsilon # trial
+      table(y>=0,eta>=0)
     } else if(i==3){
-      y <- ifelse(eta<0,-sqrt(abs(eta)),eta^2)
+      #y <- ifelse(eta<0,-sqrt(abs(eta)),eta^2) # original
+      y <- ifelse(eta<0,-sqrt(abs(eta+epsilon)),(eta+epsilon)^2) # trial
     } else if(i==4){
-      y <- eta + stats::rbinom(n=n,size=1,prob=0.05)*(2*stats::rbinom(n=n,size=1,prob=0.5)-1)*1.5*max(abs(eta))
+      #y <- eta + stats::rbinom(n=n,size=1,prob=0.05)*(2*stats::rbinom(n=n,size=1,prob=0.5)-1)*1.5*max(abs(eta)) # original
+      y <- eta + epsilon + stats::rbinom(n=n,size=1,prob=0.05)*(2*stats::rbinom(n=n,size=1,prob=0.5)-1)*1.5*max(abs(eta)) # trial
     }
     foldid <- rep(c(0,1),times=c(n0,n1))
     loss[[i]][[j]] <- cv.cornet(y=y,cutoff=0,X=X,rf=TRUE,svm=TRUE,foldid.ext=foldid)
@@ -219,10 +230,15 @@ for(i in seq_len(4)){
 }
 
 save(loss,file="results/examples.RData")
+```
 
+
+```{r examples_figure,echo=TRUE,eval=TRUE}
 load("results/examples.RData")
 
-graphics::par(mfrow=c(2,2),mar=c(3,3,1,1))
+grDevices::pdf("manuscript/figure_EXA.pdf",width=5,height=5)
+
+graphics::par(mfrow=c(2,2),mar=c(2,2,1,1))
 pos <- c(binomial=1,combined=2,gaussian=3)
 col <- c(binomial="red",combined="grey",gaussian="blue")
 cex <- 0.7
@@ -235,7 +251,7 @@ for(i in seq_len(4)){
   #graphics::box()
   #graphics::axis(side=1,at=pos,labels=names(pos),cex.axis=cex)
   #graphics::axis(side=2,cex.axis=cex)
-  graphics::boxplot(x=frame[,names],at=pos[names],col=col[names],cex.axis=0.7,main=i,axes=FALSE)
+  graphics::boxplot(x=frame[,names],at=pos[names],col=col[names],cex.axis=cex,main=paste0("example ",i),cex.main=cex,axes=FALSE)
   graphics::box()
   graphics::axis(side=1,at=pos[names],labels=names,cex.axis=cex,tick=FALSE,line=-1)
   graphics::axis(side=2,cex.axis=cex)
@@ -249,6 +265,8 @@ for(i in seq_len(4)){
     graphics::text(x=mean(c(pos["combined"],pos[[j]])),y=min(frame),labels=paste0("p=",format(pvalue,digits=2,scientific=TRUE),signif),pos=3,cex=0.7)
   }
 }
+
+grDevices::dev.off()
 ```
 
 
