@@ -67,9 +67,9 @@ round(100*colMeans(Y<25.5,na.rm=TRUE),1) # proportion impairment
 
 # --- Cross-validating models. ---
 names <- paste0(rep(c("lasso","ridge"),each=3),seq_len(3)) # change to 3!
-loss <- fit <- pval <- list()
+loss <- fit <- p.log <- p.lin <- list()
 for(i in seq_along(x)){
-  loss[[i]] <- fit[[i]] <- pval[[i]] <- list()
+  loss[[i]] <- fit[[i]] <- p.log[[i]] <- p.lin[[i]] <- list()
     cat("i =",i,"\n")
     for(j in seq_along(names)){
       cat("j =",j," ")
@@ -84,12 +84,14 @@ for(i in seq_along(x)){
       fit[[i]][[names[j]]] <- cornet::cornet(y=y[cond],cutoff=25.5,
                                   X=x[[i]][cond,],alpha=alpha)
       set.seed(i)
-      pval[[i]][[names[j]]] <- median(replicate(n=50,expr=cornet:::.test(y=y[cond],cutoff=25.5,X=x[[i]][cond,],alpha=alpha)))
+      temp <- median(replicate(n=50,expr=cornet:::.test(y=y[cond],cutoff=25.5,X=x[[i]][cond,],alpha=alpha)))
+      p.log[[i]][[names[j]]] <- temp$log
+      p.lin[[i]][[names[j]]] <- temp$lin
     }
     cat("\n")
 }
 
-save(loss,fit,pval,file="results/application.RData")
+save(loss,fit,p.log,p.lin,file="results/application.RData")
 writeLines(text=capture.output(utils::sessionInfo(),cat("\n"),
         sessioninfo::session_info()),con="results/info_app.txt")
 ```
