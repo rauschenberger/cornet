@@ -57,6 +57,87 @@ graphics::text(x=0.8,y=0.3,labels="transform\npredicted values to\npredicted pro
 grDevices::dev.off()
 ```
 
+# Examples
+
+```{r examples,eval=FALSE,echo=FALSE}
+loss <- list()
+for(i in seq_len(4)){
+  loss[[i]] <- list()
+  cat("mode:",i,"\n")
+  for(j in seq_len(100)){
+    set.seed(j)
+    cat("iteration:",j,"\n")
+    n0 <- 100; n1 <- 10000; p <- 500
+    n <- n0 + n1
+    X <- matrix(data=stats::rnorm(n*p),nrow=n,ncol=p)
+    beta <- stats::rbinom(n=p,size=1,prob=0.05)*stats::rnorm(n=p)
+    # eta <- X %*% beta + stats::rnorm(n=n) # original
+    eta <- X %*% beta # trial
+    epsilon <- stats::rnorm(n=n)
+    if(i==1){
+      #y <- eta # original
+      y <- eta + epsilon # trial
+    } else if(i==2){
+      #y <- ifelse(eta<0,-3,3) + stats::rnorm(n=n)
+      #y <- ifelse(eta<0,-stats::runif(n),+stats::runif(n))
+      #y <- ifelse(eta<0,stats::rnorm(n=n,mean=-2),stats::rnorm(n=n,mean=2))
+      #y <- ifelse(eta<0,stats::rnorm(n=n,mean=-1,sd=0.4),stats::rnorm(n=n,mean=1,sd=0.4))
+      #y <- ifelse(eta<0,-1,+1)*abs(stats::rnorm(n)) # original
+      y <- ifelse(eta<0,-2,+2)+epsilon # trial
+      table(y>=0,eta>=0)
+    } else if(i==3){
+      #y <- ifelse(eta<0,-sqrt(abs(eta)),eta^2) # original
+      y <- ifelse(eta<0,-sqrt(abs(eta+epsilon)),(eta+epsilon)^2) # trial
+    } else if(i==4){
+      #y <- eta + stats::rbinom(n=n,size=1,prob=0.05)*(2*stats::rbinom(n=n,size=1,prob=0.5)-1)*1.5*max(abs(eta)) # original
+      y <- eta + epsilon + stats::rbinom(n=n,size=1,prob=0.05)*(2*stats::rbinom(n=n,size=1,prob=0.5)-1)*1.5*max(abs(eta)) # trial
+    }
+    foldid <- rep(c(0,1),times=c(n0,n1))
+    loss[[i]][[j]] <- cv.cornet(y=y,cutoff=0,X=X,rf=TRUE,svm=TRUE,foldid.ext=foldid)
+  }
+}
+
+save(loss,file="results/examples.RData")
+```
+
+
+```{r examples_figure,echo=TRUE,eval=TRUE}
+load("results/examples.RData")
+
+grDevices::pdf("manuscript/figure_EXA.pdf",width=5,height=5)
+
+graphics::par(mfrow=c(2,2),mar=c(2,2,1,1))
+pos <- c(binomial=1,combined=2,gaussian=3)
+col <- c(binomial="red",combined="grey",gaussian="blue")
+cex <- 0.7
+names <- c("binomial","combined","gaussian")
+for(i in seq_len(4)){
+  frame <- as.data.frame(t(sapply(loss[[i]],function(x) x$deviance)))
+  #frame <- frame/frame$intercept # optional standardisation
+  #graphics::plot.new()
+  #graphics::plot.window(xlim=c(min(pos)-0.5,max(pos)+0.5),ylim=range(frame))
+  #graphics::box()
+  #graphics::axis(side=1,at=pos,labels=names(pos),cex.axis=cex)
+  #graphics::axis(side=2,cex.axis=cex)
+  graphics::boxplot(x=frame[,names],at=pos[names],col=col[names],cex.axis=cex,main=paste0("example ",i),cex.main=cex,axes=FALSE)
+  graphics::box()
+  graphics::axis(side=1,at=pos[names],labels=names,cex.axis=cex,tick=FALSE,line=-1)
+  graphics::axis(side=2,cex.axis=cex)
+  for(j in c("binomial","combined","gaussian")){
+    #graphics::boxplot(x=frame[[j]],at=pos[[j]],col=col[[j]],add=TRUE,ann=FALSE)
+    mean <- mean(frame[[j]])
+    graphics::points(x=pos[j],y=mean,pch=21,col="white",bg="black")
+    if(j=="combined"){next}
+    pvalue <- stats::wilcox.test(x=frame$combined,y=frame[[j]],alternative="less")$p.value
+    signif <- ifelse(pvalue<=0.05/8,"*","")
+    graphics::text(x=mean(c(pos["combined"],pos[[j]])),y=min(frame),labels=paste0("p=",format(pvalue,digits=2,scientific=TRUE),signif),pos=3,cex=0.7)
+  }
+}
+
+grDevices::dev.off()
+```
+
+
 
 # Analysis
 
@@ -185,89 +266,6 @@ for(k in c("ridge","lasso")){
 cbind(col,as.character(txt)) # verify
 ```
 
-```{r examples,eval=FALSE,echo=FALSE}
-# This chunk shows one example where combined regression outperforms logistic regression and three examples where combined regression outperforms transformed linear regression.
-
-# Note: 'latent: binary variable contains all information', 'asymmetric + outliers: linear regression fails to capture all signal'
-
-# Note: Simulating correlated features? Then use constant signs for betas!
-
-loss <- list()
-for(i in seq_len(4)){
-  loss[[i]] <- list()
-  cat("mode:",i,"\n")
-  for(j in seq_len(100)){
-    set.seed(j)
-    cat("iteration:",j,"\n")
-    n0 <- 100; n1 <- 10000; p <- 500
-    n <- n0 + n1
-    X <- matrix(data=stats::rnorm(n*p),nrow=n,ncol=p)
-    beta <- stats::rbinom(n=p,size=1,prob=0.05)*stats::rnorm(n=p)
-    # eta <- X %*% beta + stats::rnorm(n=n) # original
-    eta <- X %*% beta # trial
-    epsilon <- stats::rnorm(n=n)
-    if(i==1){
-      #y <- eta # original
-      y <- eta + epsilon # trial
-    } else if(i==2){
-      #y <- ifelse(eta<0,-3,3) + stats::rnorm(n=n)
-      #y <- ifelse(eta<0,-stats::runif(n),+stats::runif(n))
-      #y <- ifelse(eta<0,stats::rnorm(n=n,mean=-2),stats::rnorm(n=n,mean=2))
-      #y <- ifelse(eta<0,stats::rnorm(n=n,mean=-1,sd=0.4),stats::rnorm(n=n,mean=1,sd=0.4))
-      #y <- ifelse(eta<0,-1,+1)*abs(stats::rnorm(n)) # original
-      y <- ifelse(eta<0,-2,+2)+epsilon # trial
-      table(y>=0,eta>=0)
-    } else if(i==3){
-      #y <- ifelse(eta<0,-sqrt(abs(eta)),eta^2) # original
-      y <- ifelse(eta<0,-sqrt(abs(eta+epsilon)),(eta+epsilon)^2) # trial
-    } else if(i==4){
-      #y <- eta + stats::rbinom(n=n,size=1,prob=0.05)*(2*stats::rbinom(n=n,size=1,prob=0.5)-1)*1.5*max(abs(eta)) # original
-      y <- eta + epsilon + stats::rbinom(n=n,size=1,prob=0.05)*(2*stats::rbinom(n=n,size=1,prob=0.5)-1)*1.5*max(abs(eta)) # trial
-    }
-    foldid <- rep(c(0,1),times=c(n0,n1))
-    loss[[i]][[j]] <- cv.cornet(y=y,cutoff=0,X=X,rf=TRUE,svm=TRUE,foldid.ext=foldid)
-  }
-}
-
-save(loss,file="results/examples.RData")
-```
-
-
-```{r examples_figure,echo=TRUE,eval=TRUE}
-load("results/examples.RData")
-
-grDevices::pdf("manuscript/figure_EXA.pdf",width=5,height=5)
-
-graphics::par(mfrow=c(2,2),mar=c(2,2,1,1))
-pos <- c(binomial=1,combined=2,gaussian=3)
-col <- c(binomial="red",combined="grey",gaussian="blue")
-cex <- 0.7
-names <- c("binomial","combined","gaussian")
-for(i in seq_len(4)){
-  frame <- as.data.frame(t(sapply(loss[[i]],function(x) x$deviance)))
-  #frame <- frame/frame$intercept # optional standardisation
-  #graphics::plot.new()
-  #graphics::plot.window(xlim=c(min(pos)-0.5,max(pos)+0.5),ylim=range(frame))
-  #graphics::box()
-  #graphics::axis(side=1,at=pos,labels=names(pos),cex.axis=cex)
-  #graphics::axis(side=2,cex.axis=cex)
-  graphics::boxplot(x=frame[,names],at=pos[names],col=col[names],cex.axis=cex,main=paste0("example ",i),cex.main=cex,axes=FALSE)
-  graphics::box()
-  graphics::axis(side=1,at=pos[names],labels=names,cex.axis=cex,tick=FALSE,line=-1)
-  graphics::axis(side=2,cex.axis=cex)
-  for(j in c("binomial","combined","gaussian")){
-    #graphics::boxplot(x=frame[[j]],at=pos[[j]],col=col[[j]],add=TRUE,ann=FALSE)
-    mean <- mean(frame[[j]])
-    graphics::points(x=pos[j],y=mean,pch=21,col="white",bg="black")
-    if(j=="combined"){next}
-    pvalue <- stats::wilcox.test(x=frame$combined,y=frame[[j]],alternative="less")$p.value
-    signif <- ifelse(pvalue<=0.05/8,"*","")
-    graphics::text(x=mean(c(pos["combined"],pos[[j]])),y=min(frame),labels=paste0("p=",format(pvalue,digits=2,scientific=TRUE),signif),pos=3,cex=0.7)
-  }
-}
-
-grDevices::dev.off()
-```
 
 
 
