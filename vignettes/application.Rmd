@@ -101,22 +101,29 @@ writeLines(text=capture.output(utils::sessionInfo(),cat("\n"),
 ```{r table_pool}
 load("results/application.RData",verbose=TRUE)
 
+for(k in c("binomial","gaussian")){
+
 names <- c(paste0("lasso",1:3),paste0("ridge",1:3))
 frame <- data.frame(row.names=names)
 for(i in names){
 
   # deviance
   dev <- as.data.frame(t(sapply(loss,function(x) x[[i]]$deviance)))
-  dec <- (dev$combined-dev$binomial)/dev$binomial
+  dec <- (dev$combined-dev[[k]])/dev[[k]]
   # change in percent
   frame[i,"dev.min"] <- round(100*min(dec),digits=1)
   frame[i,"dev.max"] <- round(100*max(dec),digits=1)
   
   # proportion with improvement
-  frame[i,"dev.num"] <- sum(dev$combined < dev$binomial)
+  frame[i,"dev.num"] <- sum(dev$combined < dev[[k]])
 
   # significance based on multi-split
-  pvalue <- sapply(pval,function(x) x[[i]])
+  if(k=="binomial"){
+    pvalue <- sapply(p.log,function(x) x[[i]])
+  }
+  if(k=="gaussian"){
+    pvalue <- sapply(p.lin,function(x) x[[i]])
+  }
   frame[i,"pval.min"] <- round(min(pvalue),digits=3) # signif digits=2
   frame[i,"pval.max"] <- round(max(pvalue),digits=3)
   #frame[i,"pval.prop"] <- round(mean(pvalue<0.05),digits=2)
@@ -146,7 +153,9 @@ colnames(frame) <- paste0("$",colnames(frame),"}}$")
 
 #digits <- 2+c(0,1*grepl(pattern="delta_|p_",x=colnames(frame))) # old
 xtable <- xtable::xtable(frame) #,digits=digits) # old
-xtable::print.xtable(xtable,include.rownames=TRUE,sanitize.text.function=function(x) x)
+xtable::print.xtable(xtable,include.rownames=TRUE,sanitize.text.function=function(x) x,comment=FALSE)
+
+}
 ```
 
 
@@ -154,14 +163,17 @@ xtable::print.xtable(xtable,include.rownames=TRUE,sanitize.text.function=functio
 load("results/application.RData",verbose=TRUE)
 
 names <- c(paste0("lasso",1:3),paste0("ridge",1:3))
-type <- c("deviance","class","mse","mae","auc")  
+type <- c("deviance","class","mse","mae","auc")
+
+for(k in c("binomial")){
+
 frame <- matrix(NA,nrow=length(names),ncol=length(type),dimnames=list(names,type))
 
 for(i in names){
   for(j in type){
     # loss
     value <- as.data.frame(t(sapply(loss,function(x) x[[i]][[j]])))
-    change <- 100*(value$combined-value$binomial)/value$binomial
+    change <- 100*(value$combined-value[[k]])/value[[k]]
     #change <- 100*(value$combined-value$gaussian)/value$gaussian
     frame[i,j] <- median(change)
   }
@@ -173,14 +185,14 @@ for(i in names){
 #frame[,] <- paste0(median," [",min,",",max,"]")
 
 frame <- format(round(frame,digits=1))
-frame <- gsub(pattern=" ",replacement="\\\\textcolor{green}{+}",x=frame)
+frame <- gsub(pattern=" ",replacement="\\\\textcolor{orange}{+}",x=frame)
 colnames(frame) <- sapply(colnames(frame),function(x) switch(x,class="\\textsc{mcr}",mse="\\textsc{mse}",mae="\\textsc{mae}",auc="\\textsc{auc}",x))
-colnames(frame) <- paste0("$\\textcolor{green}{\\Delta}$",colnames(frame))
+colnames(frame) <- paste0("$\\textcolor{orange}{\\Delta}$",colnames(frame))
 rownames(frame) <- paste0(substr(x=rownames(frame),start=1,stop=5)," ",
                           substr(x=rownames(frame),start=6,stop=6))
 xtable <- xtable::xtable(frame,align="r|ccccc")
-xtable::print.xtable(xtable,include.rownames=TRUE,sanitize.text.function=function(x) x)
-
+xtable::print.xtable(xtable,include.rownames=TRUE,sanitize.text.function=function(x) x,comment=FALSE)
+}
 ```
 
 
