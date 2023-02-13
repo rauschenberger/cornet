@@ -121,15 +121,13 @@ for(i in seq_len(4)){
 grDevices::dev.off()
 ```
 
+# (not included)
 
-
-# Analysis
-
-```{r analysis}
+```{r analysis,eval=FALSE}
 iter <- 1000
 set.seed(1)
 frame <- data.frame(cor=runif(n=iter,min=0,max=0.9),
-                    n=round(runif(n=iter,min=100,max=200)),
+                    n=round(runif(n=iter,min=100,max=200))+10000,
                     prob=runif(n=iter,min=0.01,max=0.1),
                     sd=runif(n=iter,min=1,max=2),
                     exp=runif(n=iter,min=0.1,max=2),
@@ -141,10 +139,11 @@ for(i in seq_len(nrow(frame))){
     utils::setTxtProgressBar(pb=pb,value=i)
     set.seed(i)
     data <- do.call(what=cornet:::.simulate,args=cbind(frame[i,],p=500))
+    foldid <- rep(c(0,1),times=c(frame$n[i],10000))
     set.seed(i)
-    ridge[[i]] <- do.call(what=cornet:::cv.cornet,args=c(data,alpha=0,rf=TRUE,svm=TRUE))
+    ridge[[i]] <- do.call(what=cornet:::cv.cornet,args=c(data,alpha=0,foldid=foldid))
     set.seed(i)
-    lasso[[i]] <- do.call(what=cornet:::cv.cornet,args=c(data,alpha=1,rf=TRUE,svm=TRUE))
+    lasso[[i]] <- do.call(what=cornet:::cv.cornet,args=c(data,alpha=1,foldid=foldid))
 }
 names(lasso) <- names(ridge) <- paste0("set",seq_len(nrow(frame)))
 save(lasso,ridge,frame,file="results/simulation.RData")
@@ -153,9 +152,8 @@ writeLines(text=capture.output(utils::sessionInfo(),cat("\n"),
         sessioninfo::session_info()),con="results/info_sim.txt")
 ```
 
-# Figures
 
-```{r figure_BOX}
+```{r figure_BOX,eval=FALSE}
 #--- boxplot of different metrics ---
 load("results/simulation.RData",verbose=TRUE)
 
@@ -199,7 +197,7 @@ sapply(fuse1,function(x) mean(x>0)) # lasso
 sapply(fuse0,function(x) mean(x>0)) # ridge
 ```
 
-```{r figure_TAB}
+```{r figure_TAB,eval=FALSE}
 #--- plot of percentage changes ---
 load("results/simulation.RData",verbose=TRUE)
 
