@@ -71,26 +71,17 @@ for(i in seq_len(4)){
     n <- n0 + n1
     X <- matrix(data=stats::rnorm(n*p),nrow=n,ncol=p)
     beta <- stats::rbinom(n=p,size=1,prob=0.05)*stats::rnorm(n=p)
-    # eta <- X %*% beta + stats::rnorm(n=n) # original
-    eta <- X %*% beta # trial
+    eta <- X %*% beta
     epsilon <- stats::rnorm(n=n)
     if(i==1){
-      #y <- eta # original
-      y <- eta + epsilon # trial
+      y <- eta + epsilon
     } else if(i==2){
-      #y <- ifelse(eta<0,-3,3) + stats::rnorm(n=n)
-      #y <- ifelse(eta<0,-stats::runif(n),+stats::runif(n))
-      #y <- ifelse(eta<0,stats::rnorm(n=n,mean=-2),stats::rnorm(n=n,mean=2))
-      #y <- ifelse(eta<0,stats::rnorm(n=n,mean=-1,sd=0.4),stats::rnorm(n=n,mean=1,sd=0.4))
-      #y <- ifelse(eta<0,-1,+1)*abs(stats::rnorm(n)) # original
-      y <- ifelse(eta<0,-2,+2)+epsilon # trial
+      y <- ifelse(eta<0,-2,+2)+epsilon
       table(y>=0,eta>=0)
     } else if(i==3){
-      #y <- ifelse(eta<0,-sqrt(abs(eta)),eta^2) # original
-      y <- ifelse(eta<0,-sqrt(abs(eta+epsilon)),(eta+epsilon)^2) # trial
+      y <- ifelse(eta<0,-sqrt(abs(eta+epsilon)),(eta+epsilon)^2)
     } else if(i==4){
-      #y <- eta + stats::rbinom(n=n,size=1,prob=0.05)*(2*stats::rbinom(n=n,size=1,prob=0.5)-1)*1.5*max(abs(eta)) # original
-      y <- eta + epsilon + stats::rbinom(n=n,size=1,prob=0.05)*(2*stats::rbinom(n=n,size=1,prob=0.5)-1)*1.5*max(abs(eta)) # trial
+      y <- eta + epsilon + stats::rbinom(n=n,size=1,prob=0.05)*(2*stats::rbinom(n=n,size=1,prob=0.5)-1)*1.5*max(abs(eta))
     }
     foldid <- rep(c(0,1),times=c(n0,n1))
     loss[[i]][[j]] <- cv.cornet(y=y,cutoff=0,X=X,rf=TRUE,svm=TRUE,foldid.ext=foldid)
