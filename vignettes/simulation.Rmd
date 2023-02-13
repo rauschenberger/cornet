@@ -104,18 +104,11 @@ cex <- 0.7
 names <- c("binomial","combined","gaussian")
 for(i in seq_len(4)){
   frame <- as.data.frame(t(sapply(loss[[i]],function(x) x$deviance)))
-  #frame <- frame/frame$intercept # optional standardisation
-  #graphics::plot.new()
-  #graphics::plot.window(xlim=c(min(pos)-0.5,max(pos)+0.5),ylim=range(frame))
-  #graphics::box()
-  #graphics::axis(side=1,at=pos,labels=names(pos),cex.axis=cex)
-  #graphics::axis(side=2,cex.axis=cex)
   graphics::boxplot(x=frame[,names],at=pos[names],col=col[names],cex.axis=cex,main=paste0("example ",i),cex.main=cex,axes=FALSE)
   graphics::box()
   graphics::axis(side=1,at=pos[names],labels=names,cex.axis=cex,tick=FALSE,line=-1)
   graphics::axis(side=2,cex.axis=cex)
   for(j in c("binomial","combined","gaussian")){
-    #graphics::boxplot(x=frame[[j]],at=pos[[j]],col=col[[j]],add=TRUE,ann=FALSE)
     mean <- mean(frame[[j]])
     graphics::points(x=pos[j],y=mean,pch=21,col="white",bg="black")
     if(j=="combined"){next}
