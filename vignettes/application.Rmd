@@ -101,7 +101,7 @@ writeLines(text=capture.output(utils::sessionInfo(),cat("\n"),
 ```{r table_pool}
 load("results/application.RData",verbose=TRUE)
 
-for(k in c("binomial","gaussian")){
+k <- "binomial"
 
 names <- c(paste0("lasso",1:3),paste0("ridge",1:3))
 frame <- data.frame(row.names=names)
@@ -154,8 +154,6 @@ colnames(frame) <- paste0("$",colnames(frame),"}}$")
 #digits <- 2+c(0,1*grepl(pattern="delta_|p_",x=colnames(frame))) # old
 xtable <- xtable::xtable(frame) #,digits=digits) # old
 xtable::print.xtable(xtable,include.rownames=TRUE,sanitize.text.function=function(x) x,comment=FALSE)
-
-}
 ```
 
 
@@ -165,7 +163,7 @@ load("results/application.RData",verbose=TRUE)
 names <- c(paste0("lasso",1:3),paste0("ridge",1:3))
 type <- c("deviance","class","mse","mae","auc")
 
-for(k in c("binomial")){
+k <- "binomial"
 
 frame <- matrix(NA,nrow=length(names),ncol=length(type),dimnames=list(names,type))
 
@@ -192,9 +190,7 @@ rownames(frame) <- paste0(substr(x=rownames(frame),start=1,stop=5)," ",
                           substr(x=rownames(frame),start=6,stop=6))
 xtable <- xtable::xtable(frame,align="r|ccccc")
 xtable::print.xtable(xtable,include.rownames=TRUE,sanitize.text.function=function(x) x,comment=FALSE)
-}
 ```
-
 
 # Figures
 
@@ -247,7 +243,6 @@ legend <- sapply(sigma,function(x) as.expression(bquote(sigma == .(x))))
 graphics::legend(x="topleft",legend=legend,lty=lty,bty="n",lwd=lwd)
 grDevices::dev.off()
 ```
-
 
 <!--
 # ordinal regression
