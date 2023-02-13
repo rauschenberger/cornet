@@ -59,7 +59,7 @@ grDevices::dev.off()
 
 # Examples
 
-```{r examples,eval=FALSE,echo=FALSE}
+```{r examples}
 loss <- list()
 for(i in seq_len(4)){
   loss[[i]] <- list()
@@ -92,7 +92,7 @@ save(loss,file="results/examples.RData")
 ```
 
 
-```{r examples_figure,echo=TRUE,eval=TRUE}
+```{r examples_figure}
 load("results/examples.RData")
 
 grDevices::pdf("manuscript/figure_EXA.pdf",width=5,height=5)
