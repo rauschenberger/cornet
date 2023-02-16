@@ -6,3 +6,4 @@
 ^appveyor\.yml$
 ^\.Rhistory$
 ^CRAN-RELEASE$
+^CRAN-SUBMISSION$
