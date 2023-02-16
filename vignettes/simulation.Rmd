@@ -9,7 +9,7 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
 ---
 
-This script requires that the working directory includes the folders "data", "results", and "manuscript". We obtained our results using R 4.2.2 (2022-10-31) with cornet 0.0.7 (2023-XX-XX) on a local machine (aarch64-apple-darwin20, macOS Ventura 13.1). Floating point errors might lead to slightly different results on other platforms.
+This script requires that the working directory includes the folders "data", "results", and "manuscript". We obtained our results using R 4.2.2 (2022-10-31) with cornet 0.0.7 (2023-02-16) on a local machine (aarch64-apple-darwin20, macOS Ventura 13.1). Floating point errors might lead to slightly different results on other platforms.
 
 ```{r setup,include=FALSE}
 knitr::opts_chunk$set(echo=TRUE,eval=FALSE)

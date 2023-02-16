@@ -9,7 +9,7 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
 ---
 
-This script requires that the working directory includes the folders "data", "results", and "manuscript", with the files "PPMI_Baseline_Data_02Jul2018.csv", "PPMI_Year_1-3_Data_02Jul2018.csv" and "PPMI_Data_Dictionary_for_Baseline_Dataset_Jul2018.csv" in the folder "data". We obtained our results using R 4.2.2 (2022-10-31) with cornet 0.0.7 (2023-XX-XX) on a local machine (aarch64-apple-darwin20, macOS Ventura 13.1).
+This script requires that the working directory includes the folders "data", "results", and "manuscript", with the files "PPMI_Baseline_Data_02Jul2018.csv", "PPMI_Year_1-3_Data_02Jul2018.csv" and "PPMI_Data_Dictionary_for_Baseline_Dataset_Jul2018.csv" in the folder "data". We obtained our results using R 4.2.2 (2022-10-31) with cornet 0.0.7 (2023-02-16) on a local machine (aarch64-apple-darwin20, macOS Ventura 13.1).
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo=TRUE,eval=FALSE)
@@ -151,8 +151,7 @@ colnames(frame) <- gsub(pattern="pi.",replacement="\\\\pi_{\\\\text{",x=colnames
 colnames(frame) <- gsub(pattern="sd.",replacement="\\\\sigma_{\\\\text{",x=colnames(frame))
 colnames(frame) <- paste0("$",colnames(frame),"}}$")
 
-#digits <- 2+c(0,1*grepl(pattern="delta_|p_",x=colnames(frame))) # old
-xtable <- xtable::xtable(frame) #,digits=digits) # old
+xtable <- xtable::xtable(frame,align="r|rrc|cc|ccc|ccc")
 xtable::print.xtable(xtable,include.rownames=TRUE,sanitize.text.function=function(x) x,comment=FALSE)
 ```
 

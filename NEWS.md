@@ -1,3 +1,7 @@
+## cornet 0.0.7 (2023-02-16)
+
+* added SVM and RF
+
 ## cornet 0.0.5 (2022-08-17)
 
 * updated documentation

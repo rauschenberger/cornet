@@ -102,8 +102,8 @@ net
 
 }
 \references{
-Armin Rauschenberger and Enrico Glaab (2022).
-"Predicting artificial binary outcomes from high-dimensional data".
+Armin Rauschenberger and Enrico Glaab (2023).
+"Predicting artificial binary outcomes from high-dimensional data in biomedicine".
 \emph{Manuscript in preparation}.
 }
 \seealso{
