@@ -716,13 +716,13 @@ predict.cornet <- function(object,newx,type="probability",...){
 cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=NULL,foldid.int=NULL,type.measure="deviance",rf=FALSE,svm=FALSE,...){
   
   if(rf){
-    if(!"randomForest" %in% rownames(installed.packages())){
+    if(!"randomForest" %in% rownames(utils::installed.packages())){
       stop("Requires package 'randomForest'.")
     }
   }
   
   if(svm){
-    if(!"e1071" %in% rownames(installed.packages())){
+    if(!"e1071" %in% rownames(utils::installed.packages())){
       stop("Requires package 'e1071'.")
     }
   }
@@ -764,12 +764,12 @@ cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=N
     
     if(rf){
       object <- randomForest::randomForest(x=X0,y=as.factor(z0),norm.votes=TRUE)
-      pred[foldid.ext==i,"rf"] <- predict(object,newdata=X1,type="prob")[,2]
+      pred[foldid.ext==i,"rf"] <- stats::predict(object,newdata=X1,type="prob")[,2]
     }
     
     if(svm){
       object <- e1071::svm(x=X0,y=as.factor(z0),probability=TRUE)
-      pred[foldid.ext==i,"svm"] <- attributes(predict(object,newdata=X1,probability=TRUE))$probabilities[,2]
+      pred[foldid.ext==i,"svm"] <- attributes(stats::predict(object,newdata=X1,probability=TRUE))$probabilities[,2]
     }
     
   }

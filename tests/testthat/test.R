@@ -93,6 +93,8 @@ testthat::test_that("hidden compare function",{
 
 testthat::test_that("hidden test function",{
   p <- cornet:::.test(y=y,cutoff=cutoff,X=X)
-  testthat::expect_gte(object=p,expected=0)
-  testthat::expect_lte(object=p,expected=1)
+  testthat::expect_gte(object=p$log,expected=0)
+  testthat::expect_gte(object=p$lin,expected=0)
+  testthat::expect_lte(object=p$log,expected=1)
+  testthat::expect_lte(object=p$lin,expected=1)
 })

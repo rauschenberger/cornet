@@ -5,13 +5,13 @@ Description: Implements lasso and ridge regression for dichotomised outcomes (Ra
 Depends: R (>= 3.0.0)
 Imports: glmnet, palasso
 Suggests: knitr, testthat, rmarkdown
-Enhances: RColorBrewer, MASS, mvtnorm
+Enhances: RColorBrewer, MASS, mvtnorm, e1071, randomForest
 Authors@R: person("Armin","Rauschenberger",email="armin.rauschenberger@uni.lu",role=c("aut","cre"))
 VignetteBuilder: knitr
 License: GPL-3
 Encoding: UTF-8
 LazyData: false
 Language: en-GB
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 URL: https://github.com/rauschenberger/cornet
 BugReports: https://github.com/rauschenberger/cornet/issues

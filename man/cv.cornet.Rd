@@ -14,6 +14,8 @@ cv.cornet(
   foldid.ext = NULL,
   foldid.int = NULL,
   type.measure = "deviance",
+  rf = FALSE,
+  svm = FALSE,
   ...
 )
 }
@@ -49,6 +51,12 @@ or \code{NULL}}
 character \code{"deviance"}, \code{"mse"}, \code{"mae"},
 or \code{"class"} (see \code{\link[glmnet]{cv.glmnet}})}
 
+\item{rf}{comparison with random forest\strong{:}
+logical}
+
+\item{svm}{comparison with support vector machine\strong{:}
+logical}
+
 \item{...}{further arguments passed to
 \code{\link[cornet]{cornet}} or \code{\link[glmnet]{glmnet}}}
 }
@@ -67,7 +75,7 @@ Computes the cross-validated loss of logistic and combined regression.
 \dontrun{n <- 100; p <- 200
 y <- rnorm(n)
 X <- matrix(rnorm(n*p),nrow=n,ncol=p)
-loss <- cv.cornet(y=y,cutoff=0,X=X)
+loss <- cv.cornet(y=y,cutoff=0,X=X,rf=TRUE,svm=TRUE)
 loss}
 
 }
