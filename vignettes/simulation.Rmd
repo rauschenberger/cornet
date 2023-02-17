@@ -47,8 +47,8 @@ graphics::arrows(x0=0.6+d,y0=c(v,1-v),x1=0.8-d,y1=0.5+c(-d,d),lwd=2,col=c("blue"
 
 graphics::text(x=0.4,y=0.55,labels="binary outcome:\nlogistic regression",col="red",cex=0.7,pos=3)
 graphics::text(x=0.4,y=0.45,labels="numerical outcome:\nlinear regression",col="blue",cex=0.7,pos=1)
-graphics::text(x=0.63,y=0.5,labels="combine\npredicted\nprobabilities",col="grey",cex=0.7)
-graphics::text(x=0.8,y=0.3,labels="transform\npredicted values to\npredicted probabilities",col="grey",cex=0.7,pos=1)
+graphics::text(x=0.63,y=0.5,labels="combine\npredicted\nprobabilities",col="darkgrey",cex=0.7)
+graphics::text(x=0.8,y=0.3,labels="transform\npredicted values to\npredicted probabilities",col="darkgrey",cex=0.7,pos=1)
 
 grDevices::dev.off()
 ```
