@@ -84,12 +84,14 @@ for(i in seq_len(4)){
   }
 }
 
-save(loss,file="results/examples.RData")
+save(loss,file="results/simulation.RData")
+writeLines(text=capture.output(utils::sessionInfo(),cat("\n"),
+        sessioninfo::session_info()),con="results/info_sim.txt")
 ```
 
 
 ```{r examples_figure}
-load("results/examples.RData")
+load("results/simulation.RData")
 
 grDevices::pdf("manuscript/figure_EXA.pdf",width=5,height=5)
 
