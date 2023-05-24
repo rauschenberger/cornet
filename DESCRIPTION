@@ -1,11 +1,11 @@
 Package: cornet
-Version: 0.0.7
+Version: 0.0.8
 Title: Elastic Net with Dichotomised Outcomes
 Description: Implements lasso and ridge regression for dichotomised outcomes (Rauschenberger et al. 2022). Such outcomes are not naturally but artificially binary. They indicate whether an underlying measurement is greater than a threshold.
 Depends: R (>= 3.0.0)
 Imports: glmnet, palasso
 Suggests: knitr, testthat, rmarkdown
-Enhances: RColorBrewer, MASS, mvtnorm, e1071, randomForest
+Enhances: RColorBrewer, MASS, mvtnorm, e1071, randomForest, MLmetrics
 Authors@R: person("Armin","Rauschenberger",email="armin.rauschenberger@uni.lu",role=c("aut","cre"))
 VignetteBuilder: knitr
 License: GPL-3
