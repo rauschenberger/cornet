@@ -14,7 +14,7 @@ This script requires that the working directory includes the folders "data", "re
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo=TRUE,eval=FALSE)
 #setwd("~/Desktop/cornet")
-#utils::install.packages(pkgs=c("devtools","missRanger","xtable"))
+#utils::install.packages(pkgs=c("devtools","missRanger","xtable","MLmetrics"))
 #devtools::install_github("rauschenberger/cornet")
 ```
 
