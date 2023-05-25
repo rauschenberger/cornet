@@ -80,7 +80,7 @@ for(i in seq_len(4)){
       y <- eta + epsilon + stats::rbinom(n=n,size=1,prob=0.05)*(2*stats::rbinom(n=n,size=1,prob=0.5)-1)*1.5*max(abs(eta))
     }
     foldid <- rep(c(0,1),times=c(n0,n1))
-    loss[[i]][[j]] <- cornet::cv.cornet(y=y,cutoff=0,X=X,rf=TRUE,svm=TRUE,foldid.ext=foldid)
+    loss[[i]][[j]] <- cornet::cv.cornet(y=y,cutoff=0,X=X,foldid.ext=foldid)
   }
 }
 
