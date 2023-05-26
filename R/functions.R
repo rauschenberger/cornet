@@ -694,6 +694,10 @@ predict.cornet <- function(object,newx,type="probability",...){
 #' comparison with random forest\strong{:}
 #' logical
 #' 
+#' @param knn
+#' comparison with k-nearest neighbours\strong{:}
+#' logical
+#' 
 #' @param svm
 #' comparison with support vector machine\strong{:}
 #' logical
@@ -710,10 +714,14 @@ predict.cornet <- function(object,newx,type="probability",...){
 #' \dontrun{n <- 100; p <- 200
 #' y <- rnorm(n)
 #' X <- matrix(rnorm(n*p),nrow=n,ncol=p)
-#' loss <- cv.cornet(y=y,cutoff=0,X=X,rf=TRUE,svm=FALSE,knn=TRUE)
+#' start <- Sys.time()
+#' loss <- cv.cornet(y=y,cutoff=0,X=X,rf=TRUE,knn=TRUE,svm=FALSE)
+#' end <- Sys.time()
+#' end - start
+#' 
 #' loss}
 #' 
-cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=NULL,foldid.int=NULL,type.measure="deviance",rf=FALSE,svm=FALSE,knn=FALSE,...){
+cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=NULL,foldid.int=NULL,type.measure="deviance",rf=FALSE,knn=FALSE,svm=FALSE,...){
   
   if(rf){
     if(!"randomForest" %in% rownames(utils::installed.packages())){
@@ -721,15 +729,15 @@ cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=N
     }
   }
   
-  if(svm){
-    if(!"e1071" %in% rownames(utils::installed.packages())){
-      stop("Requires package 'e1071'.")
-    }
-  }
-  
   if(knn){
     if(!"class" %in% rownames(utils::installed.packages())){
       stop("Requires package 'class'.")
+    }
+  }
+  
+  if(svm){
+    if(!"e1071" %in% rownames(utils::installed.packages())){
+      stop("Requires package 'e1071'.")
     }
   }
   
@@ -742,7 +750,7 @@ cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=N
   
   #--- cross-validated loss ---
   
-  cols <- c("intercept","binomial","gaussian","combined","switch","rf"[rf],"svm"[svm],"knn"[knn])
+  cols <- c("intercept","binomial","gaussian","combined","switch","rf"[rf],"knn"[knn],"svm"[svm])
   pred <- matrix(data=NA,nrow=length(y),ncol=length(cols),
                  dimnames=list(NULL,cols))
   
@@ -771,30 +779,21 @@ cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=N
     if(rf){
       object <- randomForest::randomForest(x=X0,y=as.factor(z0),norm.votes=TRUE)
       pred[foldid.ext==i,"rf"] <- stats::predict(object,newdata=X1,type="prob")[,2]
-      #colnames(X0) <- paste0("x",1:ncol(X0))
-      #rf <- caret::train(x=X0,y=as.factor(z0),method="rf")
-    }
-    
-    if(svm){
-      #object <- e1071::svm(x=X0,y=as.factor(z0),probability=TRUE)
-      #object <- e1071::best.svm(x=X0,y=as.factor(z0),probability=TRUE,gamma=2^(-1:1),cost=2^(2:4))
-      #pred[foldid.ext==i,"svm"] <- attributes(stats::predict(object,newdata=X1,probability=TRUE))$probabilities[,2]
     }
     
     if(knn){
-      #object <- e1071::tune.knn(x=X0,y=as.factor(z0),probability=TRUE,k=1:10)
-      #t <- e1071::knn(train=X0,test=X1,cl=as.factor(z0),k=object$best.parameters,prob=TRUE)
-      #pred[foldid.ext==i,"svm"] <- attributes(stats::predict(object,newdata=X1,probability=TRUE))$probabilities[,2]
-      #colnames(X0) <- colnames(X1) <- paste0("x",seq_len(p))
-      #knn <- caret::train(x=X0,y=as.factor(ifelse(z0==1,"one","zero")),method="knn",trControl=caret::trainControl(classProbs=TRUE))
-      #predict(knn,newdata=X1,classProbs=TRUE)
       cvm <- numeric()
-      for(k in seq_len(50)){
+      for(k in seq_len(length(z0)-1)){
         temp  <- class::knn.cv(train=X0,cl=as.factor(z0),k=k)
         cvm[k] <- mean(z0!=temp)
       }
       temp <- class::knn(train=X0,test=X1,cl=as.factor(z0),k=which.min(cvm),prob=TRUE)
       pred[foldid.ext==i,"knn"] <- ifelse(temp==1,attributes(temp)$prob,1-attributes(temp)$prob)
+    }
+    
+    if(svm){
+      object <- e1071::best.svm(x=X0,y=as.factor(z0),probability=TRUE,gamma=2^seq(from=-1,to=1,by=0.5),cost=2^seq(from=-2,to=4,by=1))
+      pred[foldid.ext==i,"svm"] <- attributes(stats::predict(object,newdata=X1,probability=TRUE))$probabilities[,2]
     }
     
   }
