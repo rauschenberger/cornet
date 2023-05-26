@@ -715,13 +715,13 @@ predict.cornet <- function(object,newx,type="probability",...){
 #' y <- rnorm(n)
 #' X <- matrix(rnorm(n*p),nrow=n,ncol=p)
 #' start <- Sys.time()
-#' loss <- cv.cornet(y=y,cutoff=0,X=X,rf=TRUE,knn=TRUE,svm=FALSE)
+#' loss <- cv.cornet(y=y,cutoff=0,X=X,rf=TRUE,xgboost=FALSE)
 #' end <- Sys.time()
 #' end - start
 #' 
 #' loss}
 #' 
-cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=NULL,foldid.int=NULL,type.measure="deviance",rf=FALSE,knn=FALSE,svm=FALSE,...){
+cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=NULL,foldid.int=NULL,type.measure="deviance",rf=FALSE,knn=FALSE,svm=FALSE,xgboost=FALSE,...){
   
   if(rf){
     if(!"randomForest" %in% rownames(utils::installed.packages())){
@@ -741,6 +741,12 @@ cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=N
     }
   }
   
+  if(xgboost){
+    if(!"xgboost" %in% rownames(utils::installed.packages())){
+      stop("Requires package 'xgboost'.")
+    }
+  }
+  
   z <- 1*(y > cutoff)
   if(is.null(foldid.ext)){
     foldid.ext <- palasso:::.folds(y=z,nfolds=nfolds.ext)
@@ -750,7 +756,7 @@ cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=N
   
   #--- cross-validated loss ---
   
-  cols <- c("intercept","binomial","gaussian","combined","switch","rf"[rf],"knn"[knn],"svm"[svm])
+  cols <- c("intercept","binomial","gaussian","combined","switch","rf"[rf],"knn"[knn],"svm"[svm],"xgboost"[xgboost])
   pred <- matrix(data=NA,nrow=length(y),ncol=length(cols),
                  dimnames=list(NULL,cols))
   
@@ -779,6 +785,13 @@ cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=N
     if(rf){
       object <- randomForest::randomForest(x=X0,y=as.factor(z0),norm.votes=TRUE)
       pred[foldid.ext==i,"rf"] <- stats::predict(object,newdata=X1,type="prob")[,2]
+    }
+    
+    if(xgboost){
+      data0 <- xgboost::xgb.DMatrix(data=X0,label=z0)
+      xgb <- xgboost::xgboost(data=data0,objective="binary:logistic",nrounds=500) # max_depth=4,eta=0.2,nrounds=500,subsample=0.9,colsample_bytree=0.9)
+      data1 <- xgboost::xgb.DMatrix(data=X1)
+      pred[foldid.ext==i,"xgboost"] <- predict(xgb,newdata=data1,type="prob")
     }
     
     if(knn){
