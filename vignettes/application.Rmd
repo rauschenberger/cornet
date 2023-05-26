@@ -78,7 +78,7 @@ for(i in seq_along(x)){
       cond <- !is.na(y)
       set.seed(i)
       loss[[i]][[names[j]]] <- cornet::cv.cornet(y=y[cond],cutoff=25.5,
-                                  X=x[[i]][cond,],alpha=alpha,rf=(alpha==1),knn=(alpha==1))
+                                  X=x[[i]][cond,],alpha=alpha,rf=(alpha==1),xgboost=(alpha==1))
       set.seed(i)
       fit[[i]][[names[j]]] <- cornet::cornet(y=y[cond],cutoff=25.5,
                                   X=x[[i]][cond,],alpha=alpha)

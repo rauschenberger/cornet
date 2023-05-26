@@ -789,7 +789,7 @@ cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=N
     
     if(xgboost){
       data0 <- xgboost::xgb.DMatrix(data=X0,label=z0)
-      xgb <- xgboost::xgboost(data=data0,objective="binary:logistic",nrounds=500) # max_depth=4,eta=0.2,nrounds=500,subsample=0.9,colsample_bytree=0.9)
+      xgb <- xgboost::xgboost(data=data0,objective="binary:logistic",nrounds=500,print_every_n=100) # max_depth=4,eta=0.2,nrounds=500,subsample=0.9,colsample_bytree=0.9)
       data1 <- xgboost::xgb.DMatrix(data=X1)
       pred[foldid.ext==i,"xgboost"] <- predict(xgb,newdata=data1,type="prob")
     }
