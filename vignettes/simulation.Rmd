@@ -14,7 +14,6 @@ This script requires that the working directory includes the folders "data", "re
 ```{r setup,include=FALSE}
 knitr::opts_chunk$set(echo=TRUE,eval=FALSE)
 #setwd("~/Desktop/cornet")
-#utils::install.packages(pkgs=c("randomForest","e1071","MLmetrics"))
 #devtools::install_github("rauschenberger/cornet")
 ```
 
