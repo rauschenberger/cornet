@@ -1,6 +1,10 @@
+## cornet 0.0.9 (2023-06-01)
+
+* added xgboost and PR-AUC
+
 ## cornet 0.0.7 (2023-02-16)
 
-* added SVM and RF
+* added randomForest
 
 ## cornet 0.0.5 (2022-08-17)
 
