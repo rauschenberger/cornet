@@ -740,7 +740,7 @@ cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=N
   
   #--- cross-validated loss ---
   
-  cols <- c("intercept","binomial","gaussian","combined","switch","rf"[rf],"knn"[knn],"svm"[svm],"xgboost"[xgboost])
+  cols <- c("intercept","binomial","gaussian","combined","switch","rf"[rf],"xgboost"[xgboost])
   pred <- matrix(data=NA,nrow=length(y),ncol=length(cols),
                  dimnames=list(NULL,cols))
   
