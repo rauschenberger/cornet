@@ -191,12 +191,12 @@ for(i in 1:3){
   lasso <- apply(sapply(loss,function(x) x[[paste0("lasso",i)]]$deviance),1,median)
   names(lasso)[names(lasso)=="binomial"] <- "logistic lasso regression"
   names(lasso)[names(lasso)=="combined"] <- "combined lasso regression"
-  names(lasso)[names(lasso)=="rf"] <- "random forest"
-  names(lasso)[names(lasso)=="knn"] <- "$k$-nearest neighbours"
   ridge <- apply(sapply(loss,function(x) x[[paste0("ridge",i)]]$deviance),1,median)
   names(ridge)[names(ridge)=="binomial"] <- "logistic ridge regression"
   names(ridge)[names(ridge)=="combined"] <- "combined ridge regression"
-  table <- cbind(table,c(lasso[c("logistic lasso regression","combined lasso regression")],ridge[c("logistic ridge regression","combined ridge regression")],lasso["random forest"],lasso["$k$-nearest neighbours"]))
+  table <- cbind(table,c(lasso[c("logistic lasso regression","combined lasso regression")],ridge[c("logistic ridge regression","combined ridge regression")],lasso["rf"],lasso["xgboost"])) 
+  rownames(table)[rownames(table)=="rf"] <- "\\texttt{randomForest}"
+  rownames(table)[rownames(table)=="xgboost"] <- "\\texttt{xgboost}"
 }
 colnames(table) <- paste("year",1:3)
 rownames(table) <- paste("\\footnotesize",rownames(table))
