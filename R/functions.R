@@ -761,7 +761,7 @@ cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=N
     tryCatch(expr=plot.cornet(fit),error=function(x) NULL)
     temp <- predict.cornet(fit,newx=X1)
     if(any(temp<0|temp>1)){stop("Outside unit interval.",call.=FALSE)}
-    model <- colnames(temp) # was "colnames(pred)"
+    model <- colnames(temp)
     for(j in seq_along(model)){
       pred[foldid.ext==i,model[j]] <- temp[[model[j]]]
     }
