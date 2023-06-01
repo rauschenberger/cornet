@@ -799,7 +799,7 @@ cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=N
   loss <- lapply(X=type,FUN=function(x) palasso:::.loss(y=z[foldid.ext!=0],fit=pred[foldid.ext!=0,],family="binomial",type.measure=x,foldid=foldid.ext[foldid.ext!=0])[[1]])
   names(loss) <- type
   
-  if("MLmetrics" %in% installed.packages()[,1]){
+  if("MLmetrics" %in% utils::installed.packages()[,1]){
     loss$prauc <- apply(pred[foldid.ext!=0,],2,function(x) MLmetrics::PRAUC(y_pred=x,y_true=z[foldid.ext!=0]))
   }
 
