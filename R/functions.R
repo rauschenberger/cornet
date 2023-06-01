@@ -694,12 +694,8 @@ predict.cornet <- function(object,newx,type="probability",...){
 #' comparison with random forest\strong{:}
 #' logical
 #' 
-#' @param knn
-#' comparison with k-nearest neighbours\strong{:}
-#' logical
-#' 
-#' @param svm
-#' comparison with support vector machine\strong{:}
+#' @param xgboost
+#' comparison with extreme gradient boosting\strong{:}
 #' logical
 #' 
 #' @param ... further arguments passed to
@@ -715,29 +711,17 @@ predict.cornet <- function(object,newx,type="probability",...){
 #' y <- rnorm(n)
 #' X <- matrix(rnorm(n*p),nrow=n,ncol=p)
 #' start <- Sys.time()
-#' loss <- cv.cornet(y=y,cutoff=0,X=X,rf=TRUE,xgboost=FALSE)
+#' loss <- cv.cornet(y=y,cutoff=0,X=X)
 #' end <- Sys.time()
 #' end - start
 #' 
 #' loss}
 #' 
-cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=NULL,foldid.int=NULL,type.measure="deviance",rf=FALSE,knn=FALSE,svm=FALSE,xgboost=FALSE,...){
+cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=NULL,foldid.int=NULL,type.measure="deviance",rf=FALSE,xgboost=FALSE,...){
   
   if(rf){
     if(!"randomForest" %in% rownames(utils::installed.packages())){
       stop("Requires package 'randomForest'.")
-    }
-  }
-  
-  if(knn){
-    if(!"class" %in% rownames(utils::installed.packages())){
-      stop("Requires package 'class'.")
-    }
-  }
-  
-  if(svm){
-    if(!"e1071" %in% rownames(utils::installed.packages())){
-      stop("Requires package 'e1071'.")
     }
   }
   
@@ -783,7 +767,7 @@ cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=N
     }
     
     if(rf){
-      object <- randomForest::randomForest(x=X0,y=as.factor(z0),norm.votes=TRUE)
+      object <- randomForest::randomForest(x=X0,y=as.factor(z0))
       pred[foldid.ext==i,"rf"] <- stats::predict(object,newdata=X1,type="prob")[,2]
     }
     
@@ -794,20 +778,20 @@ cv.cornet <- function(y,cutoff,X,alpha=1,nfolds.ext=5,nfolds.int=10,foldid.ext=N
       pred[foldid.ext==i,"xgboost"] <- predict(xgb,newdata=data1,type="prob")
     }
     
-    if(knn){
-      cvm <- numeric()
-      for(k in seq_len(length(z0)-1)){
-        temp  <- class::knn.cv(train=X0,cl=as.factor(z0),k=k)
-        cvm[k] <- mean(z0!=temp)
-      }
-      temp <- class::knn(train=X0,test=X1,cl=as.factor(z0),k=which.min(cvm),prob=TRUE)
-      pred[foldid.ext==i,"knn"] <- ifelse(temp==1,attributes(temp)$prob,1-attributes(temp)$prob)
-    }
+    # if(knn){
+    #   cvm <- numeric()
+    #   for(k in seq_len(length(z0)-1)){
+    #     temp  <- class::knn.cv(train=X0,cl=as.factor(z0),k=k)
+    #     cvm[k] <- mean(z0!=temp)
+    #   }
+    #   temp <- class::knn(train=X0,test=X1,cl=as.factor(z0),k=which.min(cvm),prob=TRUE)
+    #   pred[foldid.ext==i,"knn"] <- ifelse(temp==1,attributes(temp)$prob,1-attributes(temp)$prob)
+    # }
     
-    if(svm){
-      object <- e1071::best.svm(x=X0,y=as.factor(z0),probability=TRUE,gamma=2^seq(from=-1,to=1,by=0.5),cost=2^seq(from=-2,to=4,by=1))
-      pred[foldid.ext==i,"svm"] <- attributes(stats::predict(object,newdata=X1,probability=TRUE))$probabilities[,2]
-    }
+    # if(svm){
+    #   object <- e1071::best.svm(x=X0,y=as.factor(z0),probability=TRUE,gamma=2^seq(from=-1,to=1,by=0.5),cost=2^seq(from=-2,to=4,by=1))
+    #   pred[foldid.ext==i,"svm"] <- attributes(stats::predict(object,newdata=X1,probability=TRUE))$probabilities[,2]
+    # }
     
   }
   
