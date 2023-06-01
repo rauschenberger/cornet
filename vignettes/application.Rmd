@@ -9,12 +9,12 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
 ---
 
-This script requires that the working directory includes the folders "data", "results", and "manuscript", with the files "PPMI_Baseline_Data_02Jul2018.csv", "PPMI_Year_1-3_Data_02Jul2018.csv" and "PPMI_Data_Dictionary_for_Baseline_Dataset_Jul2018.csv" in the folder "data". We obtained our results using R 4.2.2 (2022-10-31) with cornet 0.0.7 (2023-02-16) on a local machine (aarch64-apple-darwin20, macOS Ventura 13.1).
+This script requires that the working directory includes the folders "data", "results", and "manuscript", with the files "PPMI_Baseline_Data_02Jul2018.csv", "PPMI_Year_1-3_Data_02Jul2018.csv" and "PPMI_Data_Dictionary_for_Baseline_Dataset_Jul2018.csv" in the folder "data". We obtained our results using R 4.3.0 (2023-04-21) with cornet 0.0.8 (2023-06-01) on a local machine (aarch64-apple-darwin20, macOS Ventura 13.4).
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo=TRUE,eval=FALSE)
 #setwd("~/Desktop/cornet")
-#utils::install.packages(pkgs=c("devtools","missRanger","xtable","randomForest","e1071","MLmetrics","class"))
+#utils::install.packages(pkgs=c("devtools","missRanger","xtable","randomForest","MLmetrics"))
 #devtools::install_github("rauschenberger/cornet")
 ```
 
