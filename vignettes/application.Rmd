@@ -97,10 +97,10 @@ writeLines(text=capture.output(utils::sessionInfo(),cat("\n"),
 
 # Results
 
-```{r table_pool}
+```{r table_test}
 load("results/application.RData",verbose=TRUE)
 
-k <- "binomial"
+k <- "binomial" # compare: k <- "gaussian
 
 names <- c(paste0("lasso",1:3),paste0("ridge",1:3))
 frame <- data.frame(row.names=names)
@@ -154,7 +154,7 @@ xtable::print.xtable(xtable,include.rownames=TRUE,sanitize.text.function=functio
 ```
 
 
-```{r table_other}
+```{r table_change}
 load("results/application.RData",verbose=TRUE)
 
 names <- c(paste0("lasso",1:3),paste0("ridge",1:3))
@@ -182,8 +182,7 @@ xtable <- xtable::xtable(frame,align="r|cccccc")
 xtable::print.xtable(xtable,include.rownames=TRUE,sanitize.text.function=function(x) x,comment=FALSE)
 ```
 
-```{r table_new}
-rm(list=ls())
+```{r table_other}
 load("results/application.RData",verbose=TRUE)
 
 table <- numeric()
