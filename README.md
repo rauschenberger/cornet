@@ -2,11 +2,11 @@
 <!-- Modify xxx.Rmd, not xxx.md! -->
 
 [![Travis-CI Build
-Status](https://travis-ci.org/rauschenberger/cornet.svg)](https://travis-ci.org/rauschenberger/cornet)
+Status](https://travis-ci.org/rauschenberger/cornet.svg)](https://app.travis-ci.com/rauschenberger/cornet)
 [![AppVeyor build
 status](https://ci.appveyor.com/api/projects/status/github/rauschenberger/cornet?svg=true)](https://ci.appveyor.com/project/rauschenberger/cornet)
 [![Coverage
-Status](https://codecov.io/github/rauschenberger/cornet/coverage.svg?branch=master)](https://codecov.io/github/rauschenberger/cornet)
+Status](https://codecov.io/github/rauschenberger/cornet/coverage.svg?branch=master)](https://app.codecov.io/github/rauschenberger/cornet)
 
 ## Scope
 
