@@ -98,7 +98,8 @@
 #' @references 
 #' Armin Rauschenberger and Enrico Glaab (2023).
 #' "Predicting artificial binary outcomes from high-dimensional data in biomedicine".
-#' \emph{Manuscript in preparation}.
+#' \emph{Journal of Applied Statistics}. In press.
+#' \doi{10.1080/02664763.2023.2233057}
 #' 
 #' @examples
 #' n <- 100; p <- 200

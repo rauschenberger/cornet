@@ -33,8 +33,9 @@ devtools::install_github("rauschenberger/cornet")
 ## Reference
 
 Armin Rauschenberger and Enrico Glaab (2023). “Predicting artificial
-binary outcomes from high-dimensional data in biomedicine”. *Manuscript
-in preparation.*
+binary outcomes from high-dimensional data in biomedicine”. *Journal or
+Applied Statistics.* In press. [doi:
+10.1080/02664763.2023.2233057](https:/doi.org/10.1080/02664763.2023.2233057)
 
 [![CRAN
 version](https://www.r-pkg.org/badges/version/cornet)](https://CRAN.R-project.org/package=cornet)

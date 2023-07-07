@@ -1,3 +1,7 @@
+## cornet 0.0.10 (2023-07-01)
+
+* added reference
+
 ## cornet 0.0.9 (2023-06-01)
 
 * added xgboost and PR-AUC
