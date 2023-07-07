@@ -98,9 +98,9 @@
 “data”, “results”, and “manuscript”, with the files
 “PPMI_Baseline_Data_02Jul2018.csv”, “PPMI_Year_1-3_Data_02Jul2018.csv”
 and “PPMI_Data_Dictionary_for_Baseline_Dataset_Jul2018.csv” in the
-folder “data”. We obtained our results using R 4.2.2 (2022-10-31) with
-cornet 0.0.7 (2023-02-16) on a local machine (aarch64-apple-darwin20,
-macOS Ventura 13.1).</p>
+folder “data”. We obtained our results using R 4.3.0 (2023-04-21) with
+cornet 0.0.8 (2023-06-01) on a local machine (aarch64-apple-darwin20,
+macOS Ventura 13.4).</p>
 <div class="section level2">
 <h2 id="processing">Processing<a class="anchor" aria-label="anchor" href="#processing"></a>
 </h2>
@@ -184,7 +184,7 @@ macOS Ventura 13.1).</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span><span class="st">"results/application.RData"</span>,verbose<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">k</span> <span class="op">&lt;-</span> <span class="st">"binomial"</span></span>
+<span><span class="va">k</span> <span class="op">&lt;-</span> <span class="st">"binomial"</span> <span class="co"># compare: k &lt;- "gaussian</span></span>
 <span></span>
 <span><span class="va">names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"lasso"</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"ridge"</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">frame</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>row.names<span class="op">=</span><span class="va">names</span><span class="op">)</span></span>
@@ -262,8 +262,7 @@ macOS Ventura 13.1).</p>
 <span><span class="va">xtable</span> <span class="op">&lt;-</span> <span class="fu">xtable</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/xtable/man/xtable.html" class="external-link">xtable</a></span><span class="op">(</span><span class="va">frame</span>,align<span class="op">=</span><span class="st">"r|cccccc"</span><span class="op">)</span></span>
 <span><span class="fu">xtable</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/xtable/man/print.xtable.html" class="external-link">print.xtable</a></span><span class="op">(</span><span class="va">xtable</span>,include.rownames<span class="op">=</span><span class="cn">TRUE</span>,sanitize.text.function<span class="op">=</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span>,comment<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span>list<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/ls.html" class="external-link">ls</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span><span class="st">"results/application.RData"</span>,verbose<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span><span class="st">"results/application.RData"</span>,verbose<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">table</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="kw">for</span><span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span><span class="op">{</span></span>
