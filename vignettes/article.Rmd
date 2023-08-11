@@ -1,5 +1,5 @@
 ---
-title: Lasso and ridge regression for dichotomised outcomes
+title: Article
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{article}
@@ -7,8 +7,32 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-The `cornet` manuscript is in press. Click [here](https://CRAN.R-project.org/package=cornet) for the R package.
+# Title
+
+**Predicting dichotomised outcomes from high-dimensional data in biomedicine**
+
+# Authors
+
+**Armin Rauschenberger**$~^{1,a}$ [![AR](https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png)](https://orcid.org/0000-0001-6498-4801)
+
+**Enrico Glaab**$~^{1}$ [![EG](https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png)](https://orcid.org/0000-0003-3977-7469)
+
+$^1$Luxembourg Centre for Systems Biomedicine (LCSB), University of Luxembourg, Esch-sur-Alzette, Luxembourg.
+
+$^{a}$To whom correspondence should be addressed.
+
+# Abstract
+
+In many biomedical applications, we are more interested in the predicted probability that a numerical outcome is above a threshold than in the predicted value of the outcome. For example, it might be known that antibody levels above a certain threshold provide immunity against a disease, or a threshold for a disease severity score might reflect conversion from the presymptomatic to the symptomatic disease stage. Accordingly, biomedical researchers often convert numerical to binary outcomes (loss of information) to conduct logistic regression (probabilistic interpretation). We address this bad statistical practice by modelling the binary outcome with logistic regression, modelling the numerical outcome with linear regression, transforming the predicted values from linear regression to predicted probabilities, and combining the predicted probabilities from logistic and linear regression. Analysing high-dimensional simulated and experimental data, namely clinical data for predicting cognitive impairment, we obtain significantly improved predictions of dichotomised outcomes. Thus, the proposed approach effectively combines binary with numerical outcomes to improve binary classification in high-dimensional settings. An implementation is available in the R package cornet on GitHub (<https://github.com/rauschenberger/cornet>) and CRAN (<https://CRAN.R-project.org/package=cornet>).
 
 ## Reference
 
 Armin Rauschenberger and Enrico Glaab (2023). "Predicting artificial binary outcomes from high-dimensional data in biomedicine". *Journal of Applied Statistics.* In press. [doi: 10.1080/02664763.2023.2233057](https:/doi.org/10.1080/02664763.2023.2233057)
+
+```{r,echo=FALSE}
+knitr::include_url("https://www.tandfonline.com/doi/pdf/10.1080/02664763.2023.2233057")
+```
+
+<!--
+The `cornet` manuscript is in press. Click [here](https://CRAN.R-project.org/package=cornet) for the R package.
+-->
