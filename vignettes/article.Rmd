@@ -30,9 +30,5 @@ In many biomedical applications, we are more interested in the predicted probabi
 Armin Rauschenberger and Enrico Glaab (2023). "Predicting artificial binary outcomes from high-dimensional data in biomedicine". *Journal of Applied Statistics.* In press. [doi: 10.1080/02664763.2023.2233057](https:/doi.org/10.1080/02664763.2023.2233057)
 
 ```{r,echo=FALSE}
-knitr::include_url("https://www.tandfonline.com/doi/pdf/10.1080/02664763.2023.2233057")
+knitr::include_url("https://publications.uni.lu/bitstream/10993/55464/2/Predicting%20dichotomised%20outcomes%20from%20high%20dimensional%20data%20in%20biomedicine.pdf")
 ```
-
-<!--
-The `cornet` manuscript is in press. Click [here](https://CRAN.R-project.org/package=cornet) for the R package.
--->
