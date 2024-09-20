@@ -22,8 +22,8 @@ or the latest development version from
 [GitHub](https://github.com/rauschenberger/cornet):
 
 ``` r
-#install.packages("devtools")
-devtools::install_github("rauschenberger/cornet")
+#install.packages("remotes")
+remotes::install_github("rauschenberger/cornet")
 ```
 
 ## Reference
