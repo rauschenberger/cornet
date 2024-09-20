@@ -1,6 +1,5 @@
 
 [![R-CMD-check](https://github.com/rauschenberger/cornet/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/rauschenberger/cornet/actions/workflows/R-CMD-check.yaml)
-
 [![Codecov test coverage](https://codecov.io/gh/rauschenberger/cornet/graph/badge.svg)](https://app.codecov.io/gh/rauschenberger/cornet)
 
 <!--
