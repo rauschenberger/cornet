@@ -96,7 +96,10 @@
 #' \code{\link[=predict.cornet]{predict}}.
 #' 
 #' @references 
-#' Armin Rauschenberger and Enrico Glaab (2024).
+#' \href{https://orcid.org/0000-0001-6498-4801}{Armin Rauschenberger}
+#' and
+#' \href{https://orcid.org/0000-0003-3977-7469}{Enrico Glaab}
+#' (2024).
 #' "Predicting dichotomised outcomes from high-dimensional data in biomedicine".
 #' \emph{Journal of Applied Statistics} 51(9):1756-1771.
 #' \doi{10.1080/02664763.2023.2233057}
