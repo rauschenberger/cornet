@@ -1,7 +1,9 @@
 .DS_Store
 .Rhistory
-docs/pkgdown.yml
 *.png
+*.html
+*.pdf
 !orcid_16x16.png
 CRAN-RELEASE
 .git
+docs
