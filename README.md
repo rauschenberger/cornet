@@ -1,8 +1,12 @@
 
-[![AppVeyor build
-status](https://ci.appveyor.com/api/projects/status/github/rauschenberger/cornet?svg=true)](https://ci.appveyor.com/project/rauschenberger/cornet)
-[![Coverage
-Status](https://codecov.io/github/rauschenberger/cornet/coverage.svg?branch=master)](https://app.codecov.io/github/rauschenberger/cornet)
+[![R-CMD-check](https://github.com/rauschenberger/cornet/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/rauschenberger/cornet/actions/workflows/R-CMD-check.yaml)
+
+[![Codecov test coverage](https://codecov.io/gh/rauschenberger/cornet/graph/badge.svg)](https://app.codecov.io/gh/rauschenberger/cornet)
+
+<!--
+[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/rauschenberger/cornet?svg=true)](https://ci.appveyor.com/project/rauschenberger/cornet)
+[![Coverage Status](https://codecov.io/github/rauschenberger/cornet/coverage.svg?branch=master)](https://app.codecov.io/github/rauschenberger/cornet)
+-->
 
 ## Scope
 
