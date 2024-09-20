@@ -29,7 +29,7 @@ devtools::install_github("rauschenberger/cornet")
 ## Reference
 
 Armin Rauschenberger and Enrico Glaab (2024). "Predicting dichotomised outcomes from high-dimensional data in biomedicine".
-*Journal of Applied Statistics* 51(9).
+*Journal of Applied Statistics* 51(9):1756-1771.
 [doi:10.1080/02664763.2023.2233057](https:/doi.org/10.1080/02664763.2023.2233057)
 
 [![CRAN version](https://www.r-pkg.org/badges/version/cornet)](https://CRAN.R-project.org/package=cornet)
