@@ -1,8 +1,4 @@
 
-<!-- Modify xxx.Rmd, not xxx.md! -->
-
-[![Travis-CI Build
-Status](https://travis-ci.org/rauschenberger/cornet.svg)](https://app.travis-ci.com/rauschenberger/cornet)
 [![AppVeyor build
 status](https://ci.appveyor.com/api/projects/status/github/rauschenberger/cornet?svg=true)](https://ci.appveyor.com/project/rauschenberger/cornet)
 [![Coverage
@@ -32,14 +28,10 @@ devtools::install_github("rauschenberger/cornet")
 
 ## Reference
 
-Armin Rauschenberger and Enrico Glaab (2023). “Predicting artificial
-binary outcomes from high-dimensional data in biomedicine”. *Journal or
-Applied Statistics.* In press. [doi:
-10.1080/02664763.2023.2233057](https:/doi.org/10.1080/02664763.2023.2233057)
+Armin Rauschenberger and Enrico Glaab (2024). "Predicting dichotomised outcomes from high-dimensional data in biomedicine".
+*Journal of Applied Statistics* 51(9).
+[doi:10.1080/02664763.2023.2233057](https:/doi.org/10.1080/02664763.2023.2233057)
 
-[![CRAN
-version](https://www.r-pkg.org/badges/version/cornet)](https://CRAN.R-project.org/package=cornet)
-[![CRAN RStudio mirror
-downloads](https://cranlogs.r-pkg.org/badges/cornet)](https://CRAN.R-project.org/package=cornet)
-[![Total CRAN
-downloads](https://cranlogs.r-pkg.org/badges/grand-total/cornet)](https://CRAN.R-project.org/package=cornet)
+[![CRAN version](https://www.r-pkg.org/badges/version/cornet)](https://CRAN.R-project.org/package=cornet)
+[![CRAN RStudio mirror downloads](https://cranlogs.r-pkg.org/badges/cornet)](https://CRAN.R-project.org/package=cornet)
+[![Total CRAN downloads](https://cranlogs.r-pkg.org/badges/grand-total/cornet)](https://CRAN.R-project.org/package=cornet)
