@@ -1,3 +1,7 @@
+## cornet 1.0.0 (2024-09-20)
+
+* updated documentation
+
 ## cornet 0.0.9 (2023-07-01)
 
 * added reference
