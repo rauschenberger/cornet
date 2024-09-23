@@ -41,7 +41,7 @@ and Enrico Glaab
 
 ## Disclaimer
 
-The R package `cornet` implements elastic net regression for dichotomised outcomes ([Rauschenberger et al., 2024](https://doi.org/10.1080/02664763.2023.2233057)).
+The R package `cornet` implements elastic net regression for dichotomised outcomes ([Rauschenberger & Glaab, 2024](https://doi.org/10.1080/02664763.2023.2233057)).
 
 Copyright &copy; 2018 Armin Rauschenberger, University of Luxembourg, Luxembourg Centre for Systems Biomedicine (LCSB), Biomedical Data Science (BDS)
 
