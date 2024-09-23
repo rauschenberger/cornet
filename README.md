@@ -33,7 +33,7 @@ and Enrico Glaab
 [![EG](https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png)](https://orcid.org/0000-0003-3977-7469)
 (2024). "Predicting dichotomised outcomes from high-dimensional data in biomedicine".
 *Journal of Applied Statistics* 51(9):1756-1771.
-[doi:10.1080/02664763.2023.2233057](https:/doi.org/10.1080/02664763.2023.2233057).
+[doi: 10.1080/02664763.2023.2233057](https://doi.org/10.1080/02664763.2023.2233057).
 
 [![CRAN version](https://www.r-pkg.org/badges/version/cornet)](https://CRAN.R-project.org/package=cornet)
 [![CRAN RStudio mirror downloads](https://cranlogs.r-pkg.org/badges/cornet)](https://CRAN.R-project.org/package=cornet)
@@ -41,7 +41,7 @@ and Enrico Glaab
 
 ## Disclaimer
 
-The R package `cornet` implements elastic net regression for dichotomised outcomes ([Rauschenberger et al., 2024](https:/doi.org/10.1080/02664763.2023.2233057)).
+The R package `cornet` implements elastic net regression for dichotomised outcomes ([Rauschenberger et al., 2024](https://doi.org/10.1080/02664763.2023.2233057)).
 
 Copyright &copy; 2018 Armin Rauschenberger, University of Luxembourg, Luxembourg Centre for Systems Biomedicine (LCSB), Biomedical Data Science (BDS)
 
