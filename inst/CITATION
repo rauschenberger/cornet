@@ -4,14 +4,15 @@ citHeader("To cite cornet in publications use:")
 bibentry(
   bibtype  = "Article",
   title    = "Predicting dichotomised outcomes from high-dimensional data in biomedicine",
-  author   = person("Rauschenberger, Armin [aut], Glaab, Enrico [aut]"),
+  author   = c(person("Armin","Rauschenberger"),person("Enrico","Glaab")),
   journal  = "Journal of Applied Statistics",
-  year     = "2024",
-  volume   = "51(9)",
+  year     = 2024,
+  volume   = "51",
+  number   = "9"
   pages    = "1756-1771",
   doi      = "10.1080/02664763.2023.2233057",
-  textVersion = paste("Armin Rauschenberger, and Enrico Glaab (2024).",
-		"\"Predicting dichotomised outcomes from high-dimensional data in biomedicine\",",
-		"Journal of Applied Statistics 51(9):1756-1771",
-		"hhttps://doi.org/10.1080/02664763.2023.2233057")
+  textVersion = paste("Armin Rauschenberger and Enrico Glaab (2024).",
+		"\"Predicting dichotomised outcomes from high-dimensional data in biomedicine\".",
+		"Journal of Applied Statistics 51(9):1756-1771.",
+		"https://doi.org/10.1080/02664763.2023.2233057")
 )
