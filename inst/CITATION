@@ -8,7 +8,7 @@ bibentry(
   journal  = "Journal of Applied Statistics",
   year     = 2024,
   volume   = "51",
-  number   = "9"
+  number   = "9",
   pages    = "1756-1771",
   doi      = "10.1080/02664763.2023.2233057",
   textVersion = paste("Armin Rauschenberger and Enrico Glaab (2024).",
