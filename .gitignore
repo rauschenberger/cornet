@@ -1,9 +1,11 @@
 .DS_Store
 .Rhistory
+.RData
 *.png
-*.html
 *.pdf
-!orcid_16x16.png
-CRAN-RELEASE
-.git
+*.html
+/*.tar.gz
 docs
+cran-comments.md
+CRAN-SUBMISSION
+CRAN-RELEASE
