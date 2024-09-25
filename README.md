@@ -3,10 +3,9 @@
 [![R-CMD-check](https://github.com/rauschenberger/cornet/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/rauschenberger/cornet/actions/workflows/R-CMD-check.yaml)
 [![Codecov test coverage](https://codecov.io/gh/rauschenberger/cornet/graph/badge.svg)](https://app.codecov.io/gh/rauschenberger/cornet)
 
-## Scope
+# Penalised regression for dichotomised outcomes 
 
-Lasso and ridge regression for dichotomised outcomes (extending
-[glmnet](https://CRAN.R-project.org/package=glmnet)).
+Implements lasso and ridge regression for dichotomised outcomes (i.e., numerical outcomes that were transformed to binary outcomes).
 
 ## Installation
 
