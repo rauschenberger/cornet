@@ -102,7 +102,7 @@
 #' (2024).
 #' "Predicting dichotomised outcomes from high-dimensional data in biomedicine".
 #' \emph{Journal of Applied Statistics} 51(9):1756-1771.
-#' \doi{10.1080/02664763.2023.2233057}.
+#' \href{https://doi.org/10.1080/02664763.2023.2233057}{10.1080/02664763.2023.2233057}.
 #' (Click
 #' \href{https://www.tandfonline.com/doi/epdf/10.1080/02664763.2023.2233057}{here}
 #' to access PDF.
