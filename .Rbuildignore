@@ -9,3 +9,4 @@
 ^CRAN-SUBMISSION$
 \.github
 ^\.github$
+license.md
